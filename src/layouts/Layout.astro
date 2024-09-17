@@ -3,6 +3,7 @@
 import '@fontsource-variable/glory';
 import '@fontsource/berkshire-swash';
 import Header from '../components/Header.astro';
+import Banner from '../components/Banner.astro';
 
 interface Props {
 	title: string;
@@ -30,7 +31,8 @@ const { title, description } = Astro.props;
 		</div>
 		<Header />
 		<main>
-			<slot />
+		<Banner/>	
+		<slot />
 		</main>
 	</body>
 </html>
@@ -61,6 +63,7 @@ const { title, description } = Astro.props;
 		margin: 0;
 		background-color: var(--white-smoke);
 		overflow-x: hidden;
+		font-family: 'Glory Variable', sans-serif;
 	}
 
 	/* Fondo animado con colores dinámicos */
