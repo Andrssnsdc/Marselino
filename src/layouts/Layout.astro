@@ -4,6 +4,7 @@ import '@fontsource-variable/glory';
 import '@fontsource/berkshire-swash';
 import Header from '../components/Header.astro';
 import Banner from '../components/Banner.astro';
+import Fondo from '../components/Fondo.astro';
 
 interface Props {
 	title: string;
@@ -25,13 +26,10 @@ const { title, description } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<div class="animated-background">
-			<div class="color-shift"></div>
-			<div class="bubbles"></div>
-		</div>
+		
 		<Header />
 		<main>
-		<Banner/>	
+		<Fondo />
 		<slot />
 		</main>
 	</body>
@@ -57,6 +55,23 @@ const { title, description } = Astro.props;
 	html{
 		font-family: 'Glory Variable', sans-serif;
 	}
+
+	h1{
+		font-size: 46px;
+	}
+
+	h2{
+		font-size:38px;
+		font-weight: 300;
+	}
+	h3{
+		font-size: 32px;
+		font-weight: 500;	
+		}
+
+	p{
+		font-size: 24px;	
+		}
 	/* Ajuste de altura mínima en el body */
 	body {
 		min-height: 100dvh; /* Altura mínima dinámica */
@@ -66,110 +81,7 @@ const { title, description } = Astro.props;
 		font-family: 'Glory Variable', sans-serif;
 	}
 
-	/* Fondo animado con colores dinámicos */
-	.animated-background {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: -1;
-		overflow: hidden;
-	}
-
-	.color-shift {
-		position: absolute;
-		top: -50%;
-		left: -50%;
-		width: 200%;
-		height: 200%;
-		background: 
-			radial-gradient(circle at 50% 40%, rgba(192, 167, 217, 0.4) 0%, transparent 20%),
-			radial-gradient(circle at 60% 70%, rgba(56, 84, 166, 0.4) 0%, transparent 15%),
-			radial-gradient(circle at 90% 90%, rgba(205, 217, 113, 0.4) 0%, transparent 25%),
-			radial-gradient(circle at 60% 40%, rgba(191, 71, 44, 0.4) 0%, transparent 10%);
-		filter: blur(80px);
-		animation: colorShift 60s infinite alternate;
-	}
-
-	@keyframes colorShift {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-
-	/* Contenedor de burbujas */
-	.bubbles {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-	}
-
-	/* Estilo base para las burbujas */
-	.bubble {
-		position: absolute;
-		bottom: -50px;
-		background: radial-gradient(circle at 30% 30%, 
-			rgba(255, 255, 255, 0.9) 0%, 
-			rgba(255, 255, 255, 0.6) 20%, 
-			rgba(255, 255, 255, 0.3) 40%, 
-			rgba(255, 255, 255, 0.1) 60%, 
-			rgba(255, 255, 255, 0) 100%);
-		border-radius: 50%;
-		opacity: 0;
-		animation: rise 15s infinite ease-in;
-		box-shadow: 0 0 10px rgba(255, 255, 255, 0.096), 
-					inset 0 0 10px rgba(255, 255, 255, 0.096);
-	}
-
-	/* Reflejo de luz en la burbuja */
-	.bubble::after {
-		content: '';
-		position: absolute;
-		top: 10%;
-		left: 15%;
-		width: 30%;
-		height: 30%;
-		background: radial-gradient(circle at center, 
-			rgba(255, 255, 255, 0.8) 0%, 
-			rgba(255, 255, 255, 0.2) 100%);
-		border-radius: 10%;
-		filter: blur(25px);
-	}
-
-	/* Animación de ascenso de las burbujas */
-	@keyframes rise {
-		0% {
-			bottom: -50px;
-			opacity: 0;
-			transform: scale(0.1) translateX(0);
-		}
-		20% {
-			opacity: 0.2;
-			transform: scale(1) translateX(20px);
-		}
-		40% {
-			opacity: 0.2;
-			transform: scale(1) translateX(-20px);
-		}
-		60% {
-			opacity: 0.2;
-			transform: scale(1) translateX(20px);
-		}
-		80% {
-			opacity: 0.1;
-			transform: scale(0.8) translateX(-20px);
-		}
-		100% {
-			bottom: 120%;
-			opacity: 0.05;
-			transform: scale(0.1) translateX(0);
-		}
-	}
+	
 
 	/* Ajustes en el estilo de encabezados y párrafos */
 	h1, h2, h3, h4, h5 {
@@ -180,48 +92,28 @@ const { title, description } = Astro.props;
 		text-wrap: pretty;
 	}
 
-	/* Estilo para bloques de código */
-	code {
-		font-family: Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
-	}
+	@media (max-width: 1080px) {
+
+h1{
+	font-size: 36px;
+}
+
+h2{
+font-size: 30px;
+}
+
+h3{
+font-size: 28px;	
+
+}
+
+p{
+font-size: 24px;	
+}
+
+}
+	
+
+	
 </style>
 
-<script>
-	function createBubble() {
-		const bubble = document.createElement('div');
-		bubble.classList.add('bubble');
-
-		// Posición horizontal aleatoria
-		bubble.style.left = `${Math.random() * 100}%`;
-
-		// Tamaño aleatorio entre 10px y 50px
-		const size = 10 + Math.random() * 180;
-		bubble.style.width = `${size}px`;
-		bubble.style.height = `${size}px`;
-
-		// Duración de animación aleatoria entre 10s y 20s
-		bubble.style.animationDuration = `${10 + Math.random() * 20}s`;
-
-		// Opacidad aleatoria entre 0.1 y 0.5
-		bubble.style.opacity = `${0.1 + Math.random() * 0.3}`;
-
-		// Retraso de inicio de animación aleatorio
-		bubble.style.animationDelay = `${Math.random() * 15}s`;
-
-		// Añadir la burbuja al contenedor
-		document.querySelector('.bubbles').appendChild(bubble);
-
-		// Eliminar la burbuja cuando termine la animación
-		bubble.addEventListener('animationend', () => {
-			bubble.remove();
-		});
-	}
-
-	// Crear burbujas cada 300ms
-	setInterval(createBubble, 1500);
-
-	// Crear un conjunto inicial de burbujas
-	for (let i = 0; i < 2; i++) {
-		createBubble();
-	}
-</script>

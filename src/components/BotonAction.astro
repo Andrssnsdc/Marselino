@@ -1,0 +1,108 @@
+---
+interface Props {
+	textBoton: string;
+	
+}
+
+const { textBoton, } = Astro.props;
+
+---
+<button class="cta-button">
+    <div class="cta-button-border">
+        <div class="cta-button-content">
+            <slot />
+            {textBoton}
+        </div>
+    </div>
+</button>
+<style>
+ @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .cta-button {
+        width: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg); /* Fondo del botón */
+        border-radius: var(--radius);
+        color: var(--white-smoke);
+        font-size: 24px;
+        font-weight: 700;
+        border: 2px solid transparent;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s;
+        z-index: 10;   
+        padding: 2px;
+        font-family: 'Glory Variable', sans-serif;
+        
+    }
+
+    .cta-button-border {
+        position: relative;
+        display: inline-block;
+        width: 99%;
+        height: 99%;
+        border-radius: var(--radius);
+        overflow: hidden;
+        z-index: 1;
+        padding: 2;
+    }
+
+    .cta-button-content {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5; /* Asegura que el contenido esté encima del borde giratorio */
+    pointer-events: none; /* Evita que el contenido bloquee interacciones */
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 8px;
+    gap: 16px;
+    
+}
+
+    .cta-button::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border-radius: var(--radius);
+        background: conic-gradient(
+            from 0deg,
+            transparent,
+            rgb(77, 131, 233),
+            transparent
+        );
+        animation: rotateShimmer var(--speed) linear infinite; /* Animación giratoria */
+        z-index: 0; /* Debajo del contenido */
+        pointer-events: none;
+    }
+
+    .cta-button:hover {
+        transform: scale(1.075);
+        box-shadow: 0 0 40px 8px rgba(38, 61, 191, 0.7);
+    }
+
+    /* Animación de rotación del borde */
+    @keyframes rotateShimmer {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    @media (max-width: 768px) {
+        
+    .cta-button{width: 90%;
+        margin-bottom: 18px;}
+   
+
+</style>

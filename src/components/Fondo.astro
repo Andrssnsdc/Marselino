@@ -1,0 +1,146 @@
+<div class="animated-background">
+			<div class="color-shift"></div>
+			<div class="bubbles"></div>
+		</div>
+<style>
+    /* Fondo animado con colores dinámicos */
+	.animated-background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.color-shift {
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background: 
+			radial-gradient(circle at 55% 60%, rgba(192, 167, 217, 0.605) 4%, transparent 20%),
+			radial-gradient(circle at 45% 40%, rgba(56, 84, 166, 0.4) 4%, transparent 20%),
+			radial-gradient(circle at 50% 75%, rgba(205, 217, 113, 0.499) 5%, transparent 10%),
+			radial-gradient(circle at 50% 25%, rgba(191, 71, 44, 0.4) 5%, transparent 10%);
+		filter: blur(25px);
+		animation: colorShift 60s infinite alternate;
+	}
+
+	@keyframes colorShift {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	/* Contenedor de burbujas */
+	.bubbles {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	/* Estilo base para las burbujas */
+	.bubble {
+		pointer-events: none;
+		position: absolute;
+		bottom: -50px;
+		background: radial-gradient(circle at 30% 30%, 
+			rgba(255, 255, 255, 0.9) 0%, 
+			rgba(255, 255, 255, 0.6) 20%, 
+			rgba(255, 255, 255, 0.3) 40%, 
+			rgba(255, 255, 255, 0.1) 60%, 
+			rgba(255, 255, 255, 0) 100%);
+		border-radius: 50%;
+		opacity: 0;
+		animation: rise 15s infinite ease-in;
+		box-shadow: 0 0 10px rgba(255, 255, 255, 0.096), 
+					inset 0 0 10px rgba(255, 255, 255, 0.096);
+	}
+
+	/* Reflejo de luz en la burbuja */
+	.bubble::after {
+		content: '';
+		position: absolute;
+		top: 10%;
+		left: 15%;
+		width: 30%;
+		height: 30%;
+		background: radial-gradient(circle at center, 
+			rgba(255, 255, 255, 0.8) 0%, 
+			rgba(255, 255, 255, 0.2) 100%);
+		border-radius: 10%;
+		filter: blur(25px);
+	}
+
+	/* Animación de ascenso de las burbujas */
+	@keyframes rise {
+		0% {
+			bottom: -50px;
+			opacity: 0;
+			transform: scale(0.1) translateX(0);
+		}
+		20% {
+			opacity: 0.2;
+			transform: scale(1) translateX(20px);
+		}
+		40% {
+			opacity: 0.2;
+			transform: scale(1) translateX(-20px);
+		}
+		60% {
+			opacity: 0.2;
+			transform: scale(1) translateX(20px);
+		}
+		80% {
+			opacity: 0.1;
+			transform: scale(0.8) translateX(-20px);
+		}
+		100% {
+			bottom: 120%;
+			opacity: 0.05;
+			transform: scale(0.1) translateX(0);
+		}
+	}
+</style>
+<script>
+	function createBubble() {
+		const bubble = document.createElement('div');
+		bubble.classList.add('bubble');
+
+		// Posición horizontal aleatoria
+		bubble.style.left = `${Math.random() * 100}%`;
+
+		// Tamaño aleatorio 
+		const size = 10 + Math.random() * 150;
+		bubble.style.width = `${size}px`;
+		bubble.style.height = `${size}px`;
+
+		// Duración de animación aleatoria 
+		bubble.style.animationDuration = `${90 + Math.random() * 3}s`;
+
+		// Opacidad aleatoria 
+		bubble.style.opacity = `${0.1 + Math.random() * 0.2}`;
+
+		// Retraso de inicio de animación aleatorio
+		bubble.style.animationDelay = `${Math.random() * 10}s`;
+
+		// Añadir la burbuja al contenedor
+		document.querySelector('.bubbles').appendChild(bubble);
+
+	}
+
+	
+
+	// Crear un conjunto inicial de burbujas
+	for (let i = 0; i < 12; i++) {
+		createBubble();
+	}
+</script>
