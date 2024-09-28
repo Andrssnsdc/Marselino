@@ -5,6 +5,7 @@ import '@fontsource/berkshire-swash';
 import Header from '../components/Header.astro';
 import Fondo from '../components/Fondo.astro';
 import { ViewTransitions } from 'astro:transitions';
+import Carrito from '../components/Carrito.astro';
 
 interface Props {
 	title: string;
@@ -29,6 +30,7 @@ const { title, description } = Astro.props;
 	<body>
 		
 		<Header />
+		<Carrito/>
 		<main>
 		<Fondo />
 		<slot />

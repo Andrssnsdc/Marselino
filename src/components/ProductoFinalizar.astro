@@ -1,18 +1,12 @@
----
-import { ViewTransitions } from 'astro:transitions';
----
-
-<ViewTransitions />
 
 <section class="fullscreen-section">
     <div class="container">
-       
         <h1>CAMISETAS</h1>
         <div class="product-container">
             <div class="product-image-container">
                 <img src="" alt="Camiseta" id="productImage" transition:name="product-image">
                 <div class="svg-container" id="svgContainer"></div>
-                <p style="color: black;">100% algodón</p>
+                <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
             </div>
             <div class="product-options">
                 <div class="option-group">
@@ -34,7 +28,7 @@ import { ViewTransitions } from 'astro:transitions';
                     <div class="error-message" id="positionError"></div>
                 </div>
                 <div class="file-input-container">
-                    <label for="fileInput" class="file-input-button">Sube las imágenes</label>
+                    <label for="fileInput" class="file-input-button">Carga las fotos que quieres bordar</label>
                     <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png" multiple>
                     <div class="error-message" id="errorMessage"></div>
                     <div class="preview-images" id="previewImages"></div>
@@ -50,66 +44,84 @@ import { ViewTransitions } from 'astro:transitions';
     </div>
 </section>
 
-<style>
+<style is:global>
+
+ 
+    h1{
+        color: var(--white-smoke);
+    }
     .fullscreen-section {
-        background-color: rgba(38, 61, 191, 0.8); /* var(--deep-blue) with transparency */
-        width: 100vw;
-        height: 100vh;
+        background: linear-gradient(to bottom, rgba(38, 61, 191, 0.608) 96%, rgba(236, 236, 236, 0) 100%);
+        width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
-        overflow-y: auto;
+        align-items: flex-start;
+        position: absolute;
+        top: 50px;
+        border: none;
+        
     }
+
     .container {
         max-width: 1200px;
+        width: 100%;
         margin: 0 auto;
         padding: 20px;
-        position: relative;
+        position: absolute;
     }
-    .cancel{
-       
-        background-color: var(--rust-red);
-        color: var(--white-smoke);
-       
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: var(--white-smoke);
-    }
+
     .product-container {
         display: flex;
         flex-direction: column;
-        background-color: var(--white-smoke);
+        background-color: #f2f2f21b;
         border-radius: 10px;
         overflow: hidden;
     }
+
     .product-image-container {
-        background-color: white;
+        
         padding: 20px;
         text-align: center;
         position: relative;
     }
+
     .product-image-container img {
         max-width: 100%;
         height: auto;
+        display: block;
+        margin: 0 auto;
     }
+
     .product-options {
         background-color: var(--medium-blue);
-        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        padding:36px 12px;
+        gap: 28px;
     }
+
     .option-group {
-        margin-bottom: 20px;
+        align-items: center;
+        flex-direction: column;
+        display: flex;
+        
     }
+
     .option-title {
         margin-bottom: 10px;
         font-weight: bold;
         color: var(--white-smoke);
+        font-size: 18px;
     }
+
     .option-buttons {
         display: flex;
         gap: 10px;
     }
+
     .option-button {
         background-color: var(--deep-blue);
         border: none;
@@ -120,36 +132,51 @@ import { ViewTransitions } from 'astro:transitions';
         text-align: center;
         display: flex;
         justify-content: center;
+        font-size: 16px;
     }
+
     .option-button.active {
         background-color: var(--white-smoke);
         color: var(--deep-blue);
     }
+
     .file-input-container {
-        margin-bottom: 20px;
+        
     }
+
     .file-input-button {
-        background-color: var(--white-smoke);
+        background-color: #f2f2f2d8;
         color: var(--deep-blue);
         padding: 10px 20px;
         border-radius: 20px;
         cursor: pointer;
         display: inline-block;
+        font-size: 18px;
     }
+    .file-input-button:hover{
+        background-color: #f2f2f2;
+        transition: ease-in-out 300ms;
+        transform: scale(1.02);
+    }
+
     .file-input {
         display: none;
     }
+
     .total {
         font-size: 1.2em;
         font-weight: bold;
         margin-bottom: 20px;
         color: var(--white-smoke);
     }
+
     .action-buttons {
         display: flex;
         gap: 10px;
-        flex-wrap: wrap ;
+        flex-wrap: wrap;
+        gap: 12px; 
     }
+
     .action-button {
         flex: 1;
         padding: 10px;
@@ -158,56 +185,81 @@ import { ViewTransitions } from 'astro:transitions';
         cursor: pointer;
         font-weight: bold;
     }
+    .action-button:hover{
+        transition: ease-in-out 300ms;
+        transform: scale(1.02);
+    }
+
     .add-to-cart,
     .cancel {
-        flex: 1 1 45%; /* Los dos primeros botones ocupan el 50% cada uno */
+        flex: 1 1 45%;
     }
 
     .buy-now {
-        flex: 1 100%; /* El tercer botón ocupa el 100% de ancho */
+        flex: 1 100%;
     }
+
     .add-to-cart {
         background-color: var(--white-smoke);
         color: var(--deep-blue);
     }
+
+    .cancel {
+        background-color: var(--rust-red);
+        color: var(--dark--grey);
+    }
+
     .buy-now {
         background-color: var(--lime-green);
-        color: var(--dark-gray);
+        color: var(--dark--grey);
     }
+
     .error-message {
-        color: var(--rust-red);
+        color: var(--lime-green);
         margin-top: 10px;
     }
+
     .preview-images {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 10px;
     }
+
     .preview-image-container {
-    width: 150px;  /* O cualquier tamaño que prefieras */
-    height: 150px;
-    position: relative; /* Para evitar que se salga del flujo del documento */
-    overflow: hidden;   /* Asegura que el contenido que exceda el contenedor se oculte */
-    margin: 10px;       /* Añade algo de espacio entre los elementos */
-}
-.preview-image {
-    width: 100%; /* La imagen ocupará todo el ancho del contenedor */
-    height: auto; /* La altura se ajustará proporcionalmente */
-    object-fit: contain; /* Ajusta la imagen sin recortarla ni distorsionarla */
-    display: block; /* Asegura que la imagen sea un bloque visible */
-}
+        width: 100px;
+        height: 100px;
+        position: relative;
+        overflow: hidden;
+        margin: 5px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .remove-image {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background-color: var(--rust-red);
-    color: white;
-    width: 24px;
-    height: 24px;
-    font-size: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: rgba(255, 0, 0, 0.7);
+        color: white;
+        border: none;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .svg-container {
         position: absolute;
         top: 0;
@@ -216,6 +268,7 @@ import { ViewTransitions } from 'astro:transitions';
         height: 100%;
         pointer-events: none;
     }
+
     .alert-overlay {
         position: fixed;
         top: 0;
@@ -228,68 +281,113 @@ import { ViewTransitions } from 'astro:transitions';
         align-items: center;
         z-index: 1000;
     }
+
     .alert-box {
-        background-color: white;
+        background-color: var(--white-smoke);
         padding: 20px;
         border-radius: 10px;
         text-align: center;
+        max-width: 80%;
+        
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .alert-buttons {
-        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        
     }
-    .alert-button {
-        margin: 0 10px;
+
+    .alert-buttons button {
         padding: 10px 20px;
         border: none;
-        border-radius: 5px;
+        border-radius: 20px;
         cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
     }
-    .alert-confirm {
+
+    .alert-buttons .cancel {
         background-color: var(--rust-red);
-        color: white;
+        color: var(--white-smoke);
+        max-width: 45%;
     }
-    .alert-cancel {
+
+    .alert-buttons .cancel:hover {
+        background-color: #a33d24;
+    }
+
+    .alert-buttons .add-to-cart {
         background-color: var(--deep-blue);
-        color: white;
+        color: var(--white-smoke);
+        max-width: 45%;
     }
+
+    .alert-buttons .add-to-cart:hover {
+        background-color: #1e2f8f;
+    }
+
     @media (min-width: 768px) {
         .product-container {
             flex-direction: row;
         }
-        .product-image-container, .product-options {
+        .product-image-container,
+        .product-options {
             flex: 1;
+            
         }
+        .product-options {
+            padding: 40px 86px;
+
+        }
+        .alert-box{
+            padding: 10px;
+           
+        }
+        .action-buttons{
+            gap: 30px;
+        }
+        .option-title {
+        
+        font-size: 24px;
+    }
+    .option-button{
+        font-size: 18px;
+    }
+        
     }
 </style>
+
 <script>
-     let basePrice = 129000;
-    let embroideryCount = 1;
-    let selectedPositions = ['Izquierda'];
-    let uploadedImages = [];
-    let selectedProduct = {};
-
-    // Recuperar y aplicar la información del producto seleccionado
-   
-
-
-    function updateTotalPrice() {
-        const totalPrice = basePrice + (embroideryCount * 30000);
-        document.getElementById('totalPrice').textContent = `Total: $ ${totalPrice.toLocaleString()}`;
+    interface ProductData {
+        title?: string;
+        imageUrl?: string;
+        price?: string;
     }
-    
-    document.addEventListener('astro:page-load', () => {
-        const productImage = document.getElementById('productImage');
+
+    let basePrice: number = 129000;
+    let embroideryCount: number = 1;
+    let selectedPositions: string[] = ['Izquierda'];
+    let uploadedImages: string[] = [];
+    let selectedProduct: ProductData = {};
+
+    function initializeComponent() {
+        const productImage = document.getElementById('productImage') as HTMLImageElement;
         const embroideryCountButtons = document.querySelectorAll('#embroideryCount .option-button');
         const embroideryPositionButtons = document.querySelectorAll('#embroideryPosition .option-button');
-        const fileInput = document.getElementById('fileInput');
-        const errorMessage = document.getElementById('errorMessage');
-        const previewImages = document.getElementById('previewImages');
-        const svgContainer = document.getElementById('svgContainer');
-        const cancelButton = document.getElementById('cancelButton');
-        const addToCartButton = document.getElementById('addToCartButton');
-        const buyNowButton = document.getElementById('buyNowButton');
-        const countError = document.getElementById('countError');
-        const positionError = document.getElementById('positionError');
+        const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+        const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+        const previewImages = document.getElementById('previewImages') as HTMLDivElement;
+        const svgContainer = document.getElementById('svgContainer') as HTMLDivElement;
+        const cancelButton = document.getElementById('cancelButton') as HTMLButtonElement;
+        const addToCartButton = document.getElementById('addToCartButton') as HTMLButtonElement;
+        const buyNowButton = document.getElementById('buyNowButton') as HTMLButtonElement;
+        const countError = document.getElementById('countError') as HTMLDivElement;
+        const positionError = document.getElementById('positionError') as HTMLDivElement;
 
         const savedImageUrl = sessionStorage.getItem('selectedImageUrl');
         if (savedImageUrl) {
@@ -297,38 +395,52 @@ import { ViewTransitions } from 'astro:transitions';
         }
         selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
         if (selectedProduct) {
-            document.querySelector('h1').textContent = selectedProduct.title || 'CAMISETAS';
+            const titleElement = document.querySelector('h1');
+            if (titleElement) titleElement.textContent = selectedProduct.title || 'CAMISETAS';
             productImage.src = selectedProduct.imageUrl || '';
-            basePrice = parseInt(selectedProduct.price) || basePrice;
+            basePrice = parseInt(selectedProduct.price || '') || basePrice;
             updateTotalPrice();
         }
 
-        function updateEmbroideryCount(count) {
+        function updateTotalPrice() {
+            const totalPrice = basePrice + ((embroideryCount - 1) * 30000);
+            const totalPriceElement = document.getElementById('totalPrice');
+            if (totalPriceElement) {
+                totalPriceElement.textContent = `Total: $ ${totalPrice.toLocaleString()}`;
+            }
+        }
+
+        function updateEmbroideryCount(count: number) {
             embroideryCount = count;
-            selectedPositions = [];
+            selectedPositions = selectedPositions.slice(0, count);
             embroideryCountButtons.forEach(button => {
-                button.classList.toggle('active', button.dataset.count == count);
+                button.classList.toggle('active', (button as HTMLButtonElement).dataset.count == count.toString());
             });
-            embroideryPositionButtons.forEach(button => button.classList.remove('active'));
             updatePositionButtons();
             updateSVGPositions();
             updateTotalPrice();
-            fileInput.value = ''; // Resetea el input de archivos al cambiar el número de bordados
-            previewImages.innerHTML = ''; // Borra las imágenes cargadas
+            
+            while (uploadedImages.length > count) {
+                uploadedImages.pop();
+                if (previewImages.lastChild) {
+                    previewImages.removeChild(previewImages.lastChild);
+                }
+            }
         }
 
         function updatePositionButtons() {
             embroideryPositionButtons.forEach(button => {
-                button.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(button.dataset.position);
-                button.classList.remove('active');
+                const btnElement = button as HTMLButtonElement;
+                btnElement.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(btnElement.dataset.position || '');
+                btnElement.classList.remove('active');
             });
             selectedPositions.forEach(position => {
-                const button = Array.from(embroideryPositionButtons).find(btn => btn.dataset.position === position);
+                const button = Array.from(embroideryPositionButtons).find(btn => (btn as HTMLButtonElement).dataset.position === position);
                 if (button) button.classList.add('active');
             });
         }
 
-        function togglePosition(position) {
+        function togglePosition(position: string) {
             if (selectedPositions.includes(position)) {
                 selectedPositions = selectedPositions.filter(p => p !== position);
             } else if (selectedPositions.length < embroideryCount) {
@@ -340,19 +452,17 @@ import { ViewTransitions } from 'astro:transitions';
 
         function updateSVGPositions() {
             svgContainer.innerHTML = '';
-            const positionMap = {
+            const positionMap: {[key: string]: {x: string, count: number}} = {
                 'Izquierda': { x: '20%', count: 0 },
                 'Centro': { x: '50%', count: 0 },
                 'Derecha': { x: '80%', count: 0 }
             };
 
-            // Distribuir los SVGs entre las posiciones seleccionadas
             for (let i = 0; i < embroideryCount; i++) {
                 const position = selectedPositions[i % selectedPositions.length];
                 positionMap[position].count++;
             }
 
-            // Crear y posicionar los SVGs
             for (const position in positionMap) {
                 const { x, count } = positionMap[position];
                 for (let i = 0; i < count; i++) {
@@ -365,13 +475,13 @@ import { ViewTransitions } from 'astro:transitions';
 
                     svg.style.position = 'absolute';
                     svg.style.left = x;
-                    svg.style.top = `${20 + i * 25}%`; // Separación de 25% entre SVGs
+                    svg.style.top = `${20 + i * 25}%`;
                     svgContainer.appendChild(svg);
                 }
             }
         }
 
-        function validateSelection() {
+        function validateSelection(): boolean {
             let isValid = true;
             if (embroideryCount === 0) {
                 countError.textContent = 'Por favor, selecciona el número de bordados.';
@@ -401,42 +511,48 @@ import { ViewTransitions } from 'astro:transitions';
                 <div class="alert-box">
                     <p>¿Estás seguro de que quieres cancelar? Tu selección no quedará guardada.</p>
                     <div class="alert-buttons">
-                        <button class="alert-button alert-confirm">Sí, cancelar</button>
-                        <button class="alert-button alert-cancel">No, continuar</button>
+                        <button id="alert-confirm" class="action-button cancel">Sí, cancelar</button>
+                        <button id="alert-cancel" class="action-button add-to-cart">No, continuar</button>
                     </div>
                 </div>
             `;
             document.body.appendChild(alertOverlay);
 
-            alertOverlay.querySelector('.alert-confirm').addEventListener('click', () => {
-                history.back();
-            });
+            const confirmButton = alertOverlay.querySelector('#alert-confirm');
+            if (confirmButton) {
+                confirmButton.addEventListener('click', () => {
+                    window.location.href = '/';
+                });
+            }
 
-            alertOverlay.querySelector('.alert-cancel').addEventListener('click', () => {
-                document.body.removeChild(alertOverlay);
-            });
+            const cancelAlertButton = alertOverlay.querySelector('#alert-cancel');
+            if (cancelAlertButton) {
+                cancelAlertButton.addEventListener('click', () => {
+                    document.body.removeChild(alertOverlay);
+                });
+            }
         }
 
         embroideryCountButtons.forEach(button => {
             button.addEventListener('click', () => {
-                updateEmbroideryCount(parseInt(button.dataset.count));
+                const count = parseInt((button as HTMLButtonElement).dataset.count || '1');
+                updateEmbroideryCount(count);
             });
         });
 
         embroideryPositionButtons.forEach(button => {
             button.addEventListener('click', () => {
-                togglePosition(button.dataset.position);
+                const position = (button as HTMLButtonElement).dataset.position;
+                if (position) togglePosition(position);
             });
         });
 
         fileInput.addEventListener('change', (event) => {
-            const files = Array.from(event.target.files);
+            const files = Array.from((event.target as HTMLInputElement).files || []);
             errorMessage.textContent = '';
-            previewImages.innerHTML = '';
-            uploadedImages = [];
 
-            if (files.length > embroideryCount) {
-                errorMessage.textContent = `Solo puedes subir ${embroideryCount} imágenes.`;
+            if (files.length > embroideryCount - uploadedImages.length) {
+                errorMessage.textContent = ` Puedes cargar ${embroideryCount - uploadedImages.length} fotos más.`;
                 return;
             }
 
@@ -452,26 +568,28 @@ import { ViewTransitions } from 'astro:transitions';
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const imgContainer = document.createElement('div');
-                    imgContainer.className = 'preview-image-container';
-                    
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('preview-image');
-                    
-                    const removeButton = document.createElement('button');
-                    removeButton.className = 'remove-image';
-                    removeButton.textContent = 'X';
-                    removeButton.addEventListener('click', () => {
-                        previewImages.removeChild(imgContainer);
-                        uploadedImages = uploadedImages.filter(img => img !== e.target.result);
-                    });
-                    
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(removeButton);
-                    previewImages.appendChild(imgContainer);
+                    if (uploadedImages.length < embroideryCount && e.target) {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'preview-image-container';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result as string;
+                        img.classList.add('preview-image');
+                        
+                        const removeButton = document.createElement('button');
+                        removeButton.className = 'remove-image';
+                        removeButton.textContent = 'X';
+                        removeButton.addEventListener('click', () => {
+                            previewImages.removeChild(imgContainer);
+                            uploadedImages = uploadedImages.filter(img => img !== e.target?.result);
+                        });
+                        
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(removeButton);
+                        previewImages.appendChild(imgContainer);
 
-                    uploadedImages.push(e.target.result);
+                        uploadedImages.push(e.target.result as string);
+                    }
                 };
                 reader.readAsDataURL(file);
             });
@@ -481,7 +599,6 @@ import { ViewTransitions } from 'astro:transitions';
 
         addToCartButton.addEventListener('click', () => {
             if (validateSelection()) {
-                // Lógica para añadir al carrito
                 saveSelections();
                 console.log('Producto añadido al carrito');
             }
@@ -489,7 +606,6 @@ import { ViewTransitions } from 'astro:transitions';
 
         buyNowButton.addEventListener('click', () => {
             if (validateSelection()) {
-                // Lógica para finalizar la compra
                 saveSelections();
                 console.log('Finalizando compra');
             }
@@ -507,8 +623,11 @@ import { ViewTransitions } from 'astro:transitions';
             sessionStorage.setItem('unifiedProductData', JSON.stringify(unifiedData));
         }
 
-        // Inicialización
         updateEmbroideryCount(1);
         updateSVGPositions();
-    });
+        updateTotalPrice();
+    }
+
+    document.addEventListener('astro:page-load', initializeComponent);
+    document.addEventListener('astro:after-swap', initializeComponent);
 </script>

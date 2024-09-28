@@ -1,8 +1,4 @@
----
-import { ViewTransitions } from 'astro:transitions';
----
 
-<ViewTransitions />
 
 <section class="container">
     <h3>Elige tu favorito</h3>
@@ -65,11 +61,11 @@ import { ViewTransitions } from 'astro:transitions';
                         </div>
                         <div class="options-column">
                             <div class="options-box">
-                                <button class="option-button color-button" style="background-color: #5f342a;"></button>
-                                <button class="option-button color-button" style="background-color: #4d5d50;"></button>
-                                <button class="option-button color-button" style="background-color: #8da1fa;"></button>
-                                <button class="option-button color-button" style="background-color: #d1d875;"></button>
-                                <button class="option-button color-button" style="background-color: #c37bbe;"></button>
+                                <button class="option-button color-button" data-identifier="cafe" style="background-color: #5f342a;"></button>
+                                <button class="option-button color-button" data-identifier="verde" style="background-color: #4d5d50;"></button>
+                                <button class="option-button color-button" data-identifier="azul" style="background-color: #8da1fa;"></button>
+                                <button class="option-button color-button" data-identifier="amarillo" style="background-color: #d1d875;"></button>
+                                <button class="option-button color-button" data-identifier="rosa" style="background-color: #c37bbe;"></button>
                             </div>
                             <div class="error-message">Selecciona un color</div>
                         </div>
