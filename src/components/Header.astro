@@ -22,7 +22,7 @@
                             </clipPath>
                             </defs>
                         </svg>
-                        <a href="#" class="active">Home</a>
+                        <a href="/#" class="active">Home</a>
                     
                     </li>
                     <li>
@@ -356,7 +356,7 @@ const navbarToggle = document.querySelector('.navbar-toggle');
 const navbarMenu = document.querySelector('.navbar-menu');
 let lastScrollTop = 0;
 let isMenuOpen = false;
-
+document.addEventListener('astro:page-load', () => {
 navbarToggle.addEventListener('click', () => {
     if (isMenuOpen) {
         closeMenu();
@@ -364,7 +364,7 @@ navbarToggle.addEventListener('click', () => {
         openMenu();
     }
 });
-
+ });
 function openMenu() {
     navbarMenu.classList.remove('hide');
     navbarMenu.classList.add('active');

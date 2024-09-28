@@ -1,3 +1,9 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+---
+
+<ViewTransitions />
+
 <section class="container">
     <h3>Elige tu favorito</h3>
     <div class="products">
@@ -22,16 +28,16 @@
                         </div>
                         <div class="options-column">
                             <div class="options-box">
-                                <button class="option-button color-button" style="background-color: #FF5733;"></button>
-                                <button class="option-button color-button" style="background-color: #33FF57;"></button>
-                                <button class="option-button color-button" style="background-color: #3357FF;"></button>
-                                <button class="option-button color-button" style="background-color: #F3FF33;"></button>
-                                <button class="option-button color-button" style="background-color: #FF33F3;"></button>
+                                <button class="option-button color-button" data-identifier="cafe" style="background-color: #5f342a;"></button>
+                                <button class="option-button color-button" data-identifier="verde" style="background-color: #4d5d50;"></button>
+                                <button class="option-button color-button" data-identifier="azul" style="background-color: #8da1fa;"></button>
+                                <button class="option-button color-button" data-identifier="amarillo" style="background-color: #d1d875;"></button>
+                                <button class="option-button color-button" data-identifier="rosa" style="background-color: #c37bbe;"></button>
                             </div>
                             <div class="error-message">Selecciona un color</div>
                         </div>
                         <div class="product-image">
-                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20(61)%20(1)-O2XtQBGgdeFKNG9yJJMDFqQx1umH1g.png" alt="Camiseta">
+                            <img src="/images/camisa-hero.webp" alt="Camiseta" transition:name="product-image">
                         </div>
                     </div>
                 </div>
@@ -59,16 +65,16 @@
                         </div>
                         <div class="options-column">
                             <div class="options-box">
-                                <button class="option-button color-button" style="background-color: #FF5733;"></button>
-                                <button class="option-button color-button" style="background-color: #33FF57;"></button>
-                                <button class="option-button color-button" style="background-color: #3357FF;"></button>
-                                <button class="option-button color-button" style="background-color: #F3FF33;"></button>
-                                <button class="option-button color-button" style="background-color: #FF33F3;"></button>
+                                <button class="option-button color-button" style="background-color: #5f342a;"></button>
+                                <button class="option-button color-button" style="background-color: #4d5d50;"></button>
+                                <button class="option-button color-button" style="background-color: #8da1fa;"></button>
+                                <button class="option-button color-button" style="background-color: #d1d875;"></button>
+                                <button class="option-button color-button" style="background-color: #c37bbe;"></button>
                             </div>
                             <div class="error-message">Selecciona un color</div>
                         </div>
                         <div class="product-image">
-                            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20(61)%20(1)-O2XtQBGgdeFKNG9yJJMDFqQx1umH1g.png" alt="Buzo">
+                            <img src="/images/camisa-hero.webp" alt="Buzo" transition:name="product-image">
                         </div>
                     </div>
                 </div>
@@ -79,189 +85,269 @@
 </section>
 
 <style>
-.container { max-width: 75vw; margin: 0 auto; }
-.products { display: flex; gap: 20px; height: 350px; }
-.product-card {
-    flex: 1; background-color: var(--medium-blue); border-radius: 16px; overflow: hidden;
-    transition: all 0.5s ease; display: flex; flex-direction: column; position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-.product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
-.product-card.buzos { background-color: var(--rust-red); }
-.product-content {
-    padding: 16px; color: var(--white-smoke); flex-grow: 1;
-    display: flex; flex-direction: column;
-}
-.product-header { display: flex; justify-content: space-between; align-items: center; }
-.product-title { font-size: 1.25rem; font-weight: bold; margin: 0; }
-.product-subtitle { font-size: 0.875rem; }
-.product-description { font-size: 0.75rem; margin-top: 8px; }
-.product-details { margin-top: 16px; flex-grow: 1; display: flex; flex-direction: column; }
-.options-container { display: flex; gap: 16px; margin-bottom: 16px; flex-grow: 1; }
-.options-column { flex: 1; }
-.options-box {
-    background-color: rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 10px;
-    transition: background-color 0.3s ease;
-}
-.option-button {
-    display: block; width: 100%; padding: 8px; margin: 4px 0; background-color: transparent;
-    border: none; color: var(--white-smoke); text-align: center; cursor: pointer;
-    border-radius: 15px; transition: background-color 0.3s ease;
-}
-.option-button:hover { background-color: rgba(255, 255, 255, 0.3); }
-.option-button.selected { background-color: rgba(255, 255, 255, 0.5); font-weight: bold; }
-.color-button {
-    width: 30px; height: 30px; border-radius: 50%; margin: 4px auto;
-    border: 2px solid transparent;
-}
-.color-button.selected {
-    border-color: white; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
-}
-.product-image { flex: 2; }
-.product-image img { width: 100%; height: auto; border-radius: 8px; }
-.continue-button {
-    display: block; width: 100%; padding: 12px; background-color: #f2f2f2cb;
-    color: var(--dark-gray); border: none; font-weight: bold; cursor: pointer;
-    transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
-    border-radius: 0 0 16px 16px;
-}
-.continue-button:hover {
-    background-color: var(--white-smoke); transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-@keyframes pulse {
-    0% { background-color: rgba(255, 0, 0, 0.1); }
-    50% { background-color: rgba(255, 0, 0, 0.3); }
-    100% { background-color: rgba(255, 0, 0, 0.1); }
-}
-@media (max-width: 1080px) { .container { max-width: 90vw; } }
-@media (max-width: 767px) {
-    .container { max-width: 90vw; }
-    .products { flex-direction: column; height: auto; }
+    .container { max-width: 75vw; margin: 0 auto; height: 500px; }
+    .products { display: flex; gap: 20px; height: 100%}
     .product-card {
-        height: 100px; overflow: hidden;
-        transition: height 0.3s ease, all 1.2s ease;
+        flex: 1; background-color: var(--medium-blue); border-radius: 16px; overflow: hidden;
+        transition: all 0.5s ease; display: flex; flex-direction: column; position: relative;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .product-card.expanded { 
-        height: 350px;
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); }
+    .product-card.buzos { background-color: var(--rust-red); }
+    .product-content {
+        padding: 16px; color: var(--white-smoke); flex-grow: 1;
+        display: flex; flex-direction: column;
     }
-    .product-details {
-        opacity: 0; max-height: 0; overflow: hidden;
-        transition: opacity 0.3s ease, max-height 0.3s ease;
+    .product-header { display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+    .product-title { font-size: 1.25rem; font-weight: bold; margin: 0; }
+    .product-subtitle { font-size: 0.875rem; }
+    .product-description { font-size: 0.75rem; margin-top: 8px; z-index: 10; }
+    .product-details { margin-top: 16px; flex-grow: 1; display: flex; flex-direction: column; align-content: center; }
+    .options-container { display: flex; gap: 16px; margin-bottom: 16px; flex-grow: 1; }
+    .options-column {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+        align-items: center;
+        z-index: 10;
+    } 
+    .options-box {
+        background-color: rgba(255, 255, 255, 0.1); border-radius: 25px; padding: 10px;
+        transition: background-color 0.3s ease;
     }
-    .product-card.expanded .product-details { opacity: 1; max-height: 1000px; }
+    .option-button {
+        display: block; width: 100%; padding: 8px; margin: 4px 0; background-color: transparent;
+        border: none; color: var(--white-smoke); text-align: center; cursor: pointer;
+        border-radius: 15px; transition: background-color 0.3s ease;
+    }
+    .option-button:hover { background-color: rgba(255, 255, 255, 0.3); }
+    .option-button.selected { background-color: rgba(255, 255, 255, 0.5); font-weight: bold; }
+    .color-button {
+        width: 30px; height: 30px; border-radius: 50%;
+        border: 2px solid transparent;
+    }
+    .color-button.selected {
+        border-color: var(--white-smoke); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+    }
+    .product-image { flex: 2; align-content: center;}
+    .product-image img {
+        width: 100%; height: auto; border-radius: 8px;
+        left: 120px;
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        
+    }
     .continue-button {
-        opacity: 0; max-height: 0; overflow: hidden;
-        transition: opacity 0.3s ease, max-height 0.3s ease;
+        display: block; position: absolute;
+        bottom: 0;
+        left: 0; width: 100%; padding: 12px; background-color: #f2f2f2cb;
+        color: var(--dark-gray); border: none; font-weight: bold; cursor: pointer;
+        transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+        border-radius: 0 0 16px 16px;
     }
-    .product-card.expanded .continue-button { opacity: 1; max-height: 50px; }
-}
-.error-message {
-    color: red; font-size: 0.8rem; margin-top: 5px; display: none;
-}
-.options-box.error {
-    animation: pulse 1s infinite;
-}
+    .continue-button:hover {
+        background-color: var(--white-smoke); transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    @keyframes pulse {
+        0% { background-color: rgba(250, 190, 190, 0.307); }
+        50% { background-color: rgba(253, 107, 107, 0.382); }
+        100% { background-color: rgba(251, 24, 24, 0.436); }
+    }
+    @media (max-width: 1080px) { .container { max-width: 90vw; height: 400px; } }
+    @media (max-width: 767px) {
+        .container { max-width: 90vw; }
+        .products { flex-direction: column; height: auto; }
+        .product-card {
+            height: 100px; overflow: hidden;
+            transition: height 0.3s ease, all 1.2s ease;
+        }
+        .options-column{
+            margin-bottom: 24px;
+        }
+        .product-details {
+            opacity: 0; max-height: 0; overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+        }
+        
+        
+        .product-card.expanded .product-details { opacity: 1; max-height: 1000px; }
+        .continue-button {
+            opacity: 0; max-height: 0; overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+        }
+        .product-card.expanded .continue-button { opacity: 1; max-height: 50px; }
+    }
+    .error-message {
+        color: rgba(206, 248, 129, 0.851); font-size: 12px; display: none; padding-bottom: 8px;
+    }
+    .options-box.error {
+        animation: pulse 900ms;
+    }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const productCards = document.querySelectorAll('.product-card');
-    const sizeButtons = document.querySelectorAll('.size-button');
-    const colorButtons = document.querySelectorAll('.color-button');
-    const continueButtons = document.querySelectorAll('.continue-button');
+    // Definir la función para cambiar la imagen del producto
+    function changeProductImage(productCard, identifier) {
+    const productImage = productCard.querySelector('.product-image img');
+    if (!productImage) return;
 
-    function adjustLayout() {
-        const isMobile = window.innerWidth < 768;
-        productCards.forEach(card => {
-            if (isMobile) {
-                card.classList.remove('expanded');
-                card.style.flex = '1';
-            } else {
-                card.style.flex = '1';
-                card.querySelector('.product-details').style.display = 'flex';
-                card.querySelector('.continue-button').style.display = 'block';
-            }
-        });
-    }
+    // Reemplaza {img} con el identificador único para formar la URL
+    const imageUrl = `./images/${identifier}.png`;
 
-    function expandCard(card) {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile) {
-            productCards.forEach(c => c.classList.remove('expanded'));
-            card.classList.add('expanded');
-        } else {
-            productCards.forEach(c => c.style.flex = c === card ? '3' : '1');
+    // Cambiar la imagen del producto
+    productImage.src = imageUrl;
+
+    // Almacenar la URL de la imagen seleccionada de manera dinámica
+    sessionStorage.setItem('selectedImageUrl', imageUrl); // Cambiado a 'selectedImageUrl' para que coincida con la otra página
+}
+
+    // Función para inicializar los eventos
+    function initializeEvents() {
+        const productCards = document.querySelectorAll('.product-card');
+        const sizeButtons = document.querySelectorAll('.size-button');
+        const colorButtons = document.querySelectorAll('.color-button');
+        const continueButtons = document.querySelectorAll('.continue-button');
+
+        function adjustLayout() {
+            const isMobile = window.innerWidth < 768;
+            productCards.forEach(card => {
+                if (isMobile) {
+                    card.classList.remove('expanded');
+                    card.style.flex = '1';
+                } else {
+                    card.style.flex = '1';
+                    const productDetails = card.querySelector('.product-details');
+                    const continueButton = card.querySelector('.continue-button');
+                    if (productDetails) productDetails.style.display = 'flex';
+                    if (continueButton) continueButton.style.display = 'block';
+                }
+            });
         }
-    }
 
-    window.addEventListener('resize', adjustLayout);
-    adjustLayout();
-
-    productCards.forEach(card => {
-        card.addEventListener('click', function() { expandCard(this); });
-        card.addEventListener('mouseleave', function() {
-            if (window.innerWidth >= 768) { adjustLayout(); }
-        });
-    });
-
-    function clearError(parent) {
-        parent.classList.remove('error');
-        parent.nextElementSibling.style.display = 'none';
-    }
-
-    sizeButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const parent = this.closest('.options-box');
-            parent.querySelectorAll('.size-button').forEach(btn => btn.classList.remove('selected'));
-            this.classList.add('selected');
-            clearError(parent);
-        });
-    });
-
-    colorButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const parent = this.closest('.options-box');
-            parent.querySelectorAll('.color-button').forEach(btn => btn.classList.remove('selected'));
-            this.classList.add('selected');
-            clearError(parent);
-        });
-    });
-
-    continueButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const productCard = this.closest('.product-card');
-            const sizeBox = productCard.querySelector('.options-column:nth-child(1) .options-box');
-            const colorBox = productCard.querySelector('.options-column:nth-child(2) .options-box');
-            const selectedSize = sizeBox.querySelector('.size-button.selected');
-            const selectedColor = colorBox.querySelector('.color-button.selected');
-
-            let isValid = true;
-
-            if (!selectedSize) {
-                sizeBox.classList.add('error');
-                sizeBox.nextElementSibling.style.display = 'block';
-                isValid = false;
+        function expandCard(card) {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                productCards.forEach(c => c.classList.remove('expanded'));
+                card.classList.add('expanded');
             } else {
-                clearError(sizeBox);
+                productCards.forEach(c => c.style.flex = c === card ? '3' : '1');
             }
+        }
 
-            if (!selectedColor) {
-                colorBox.classList.add('error');
-                colorBox.nextElementSibling.style.display = 'block';
-                isValid = false;
-            } else {
-                clearError(colorBox);
-            }
+        window.addEventListener('resize', adjustLayout);
+        adjustLayout();
 
-            if (isValid) {
-                const productTitle = productCard.querySelector('.product-title').textContent;
-                console.log(`Continuar con ${productTitle} - Talla: ${selectedSize.textContent}, Color: ${selectedColor.style.backgroundColor}`);
+        productCards.forEach(card => {
+            card.addEventListener('click', function() { expandCard(this); });
+            card.addEventListener('mouseenter', function() { expandCard(this); });
+        });
+
+        document.addEventListener('click', function(event) {
+            let clickedInsideCard = false;
+            productCards.forEach(card => {
+                if (card.contains(event.target)) {
+                    clickedInsideCard = true;
+                }
+            });
+
+            if (!clickedInsideCard) {
+                productCards.forEach(card => {
+                    card.classList.remove('expanded');
+                });
+                adjustLayout();
             }
         });
+
+        function clearError(parent) {
+            parent.classList.remove('error');
+            const errorMessage = parent.nextElementSibling;
+            if (errorMessage) errorMessage.style.display = 'none';
+        }
+
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const parent = this.closest('.options-box');
+                if (!parent) return;
+                parent.querySelectorAll('.size-button').forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                clearError(parent);
+            });
+        });
+
+        colorButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const parent = this.closest('.options-box');
+        if (!parent) return;
+        parent.querySelectorAll('.color-button').forEach(btn => btn.classList.remove('selected'));
+        this.classList.add('selected');
+        clearError(parent);
+
+        // Obtener el identificador único del botón
+        const identifier = this.getAttribute('data-identifier');
+        
+        // Obtener la tarjeta del producto y cambiar la imagen según el identificador
+        const productCard = this.closest('.product-card');
+        if (productCard && identifier) {
+            changeProductImage(productCard, identifier);
+        }
     });
 });
+        continueButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const productCard = this.closest('.product-card');
+                if (!productCard) return;
+
+                const sizeBox = productCard.querySelector('.options-column:nth-child(1) .options-box');
+                const colorBox = productCard.querySelector('.options-column:nth-child(2) .options-box');
+                const selectedSize = sizeBox?.querySelector('.size-button.selected');
+                const selectedColor = colorBox?.querySelector('.color-button.selected');
+
+                let isValid = true;
+
+                if (!selectedSize && sizeBox) {
+                    sizeBox.classList.add('error');
+                    const errorMessage = sizeBox.nextElementSibling;
+                    if (errorMessage) errorMessage.style.display = 'block';
+                    isValid = false;
+                } else if (sizeBox) {
+                    clearError(sizeBox);
+                }
+
+                if (!selectedColor && colorBox) {
+                    colorBox.classList.add('error');
+                    const errorMessage = colorBox.nextElementSibling;
+                    if (errorMessage) errorMessage.style.display = 'block';
+                    isValid = false;
+                } else if (colorBox) {
+                    clearError(colorBox);
+                }
+
+                if (isValid && selectedSize && selectedColor) {
+                    const productTitle = productCard.querySelector('.product-title')?.textContent || '';
+                    const productImage = productCard.querySelector('.product-image img');
+                    
+                    const productData = {
+                        title: productTitle,
+                        size: selectedSize.textContent || '',
+                        color: selectedColor.style.backgroundColor,
+                        imageUrl: productImage ? productImage.src : ''
+                    };
+                    
+                    sessionStorage.setItem('selectedProduct', JSON.stringify(productData));
+                    window.location.href = '/personalization';
+                }
+            });
+        });
+    }
+
+    // Ejecutar la inicialización cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', initializeEvents);
+
+    // Volver a inicializar los eventos después de una transición de vista
+    document.addEventListener('astro:page-load', initializeEvents);
 </script>

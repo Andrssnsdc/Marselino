@@ -1,0 +1,514 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+---
+
+<ViewTransitions />
+
+<section class="fullscreen-section">
+    <div class="container">
+       
+        <h1>CAMISETAS</h1>
+        <div class="product-container">
+            <div class="product-image-container">
+                <img src="" alt="Camiseta" id="productImage" transition:name="product-image">
+                <div class="svg-container" id="svgContainer"></div>
+                <p style="color: black;">100% algodón</p>
+            </div>
+            <div class="product-options">
+                <div class="option-group">
+                    <div class="option-title">¿Cuántos bordados quieres?</div>
+                    <div class="option-buttons" id="embroideryCount">
+                        <button class="option-button active" data-count="1">1</button>
+                        <button class="option-button" data-count="2">2</button>
+                        <button class="option-button" data-count="3">3</button>
+                    </div>
+                    <div class="error-message" id="countError"></div>
+                </div>
+                <div class="option-group">
+                    <div class="option-title">¿Dónde quieres los bordados?</div>
+                    <div class="option-buttons" id="embroideryPosition">
+                        <button class="option-button active" data-position="Izquierda">Izquierda</button>
+                        <button class="option-button" data-position="Centro">Centro</button>
+                        <button class="option-button" data-position="Derecha">Derecha</button>
+                    </div>
+                    <div class="error-message" id="positionError"></div>
+                </div>
+                <div class="file-input-container">
+                    <label for="fileInput" class="file-input-button">Sube las imágenes</label>
+                    <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png" multiple>
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="preview-images" id="previewImages"></div>
+                </div>
+                <div class="total" id="totalPrice">Total: $ 129.000</div>
+                <div class="action-buttons">
+                    <button class="action-button add-to-cart" id="addToCartButton">Añadir al carrito</button>
+                    <button class="action-button cancel" id="cancelButton">Cancelar</button>
+                    <button class="action-button buy-now" id="buyNowButton">Finalizar compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .fullscreen-section {
+        background-color: rgba(38, 61, 191, 0.8); /* var(--deep-blue) with transparency */
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+    }
+    .cancel{
+       
+        background-color: var(--rust-red);
+        color: var(--white-smoke);
+       
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--white-smoke);
+    }
+    .product-container {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--white-smoke);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .product-image-container {
+        background-color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+    }
+    .product-image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+    .product-options {
+        background-color: var(--medium-blue);
+        padding: 20px;
+    }
+    .option-group {
+        margin-bottom: 20px;
+    }
+    .option-title {
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: var(--white-smoke);
+    }
+    .option-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .option-button {
+        background-color: var(--deep-blue);
+        border: none;
+        color: var(--white-smoke);
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    .option-button.active {
+        background-color: var(--white-smoke);
+        color: var(--deep-blue);
+    }
+    .file-input-container {
+        margin-bottom: 20px;
+    }
+    .file-input-button {
+        background-color: var(--white-smoke);
+        color: var(--deep-blue);
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-block;
+    }
+    .file-input {
+        display: none;
+    }
+    .total {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: var(--white-smoke);
+    }
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap ;
+    }
+    .action-button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .add-to-cart,
+    .cancel {
+        flex: 1 1 45%; /* Los dos primeros botones ocupan el 50% cada uno */
+    }
+
+    .buy-now {
+        flex: 1 100%; /* El tercer botón ocupa el 100% de ancho */
+    }
+    .add-to-cart {
+        background-color: var(--white-smoke);
+        color: var(--deep-blue);
+    }
+    .buy-now {
+        background-color: var(--lime-green);
+        color: var(--dark-gray);
+    }
+    .error-message {
+        color: var(--rust-red);
+        margin-top: 10px;
+    }
+    .preview-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .preview-image-container {
+    width: 150px;  /* O cualquier tamaño que prefieras */
+    height: 150px;
+    position: relative; /* Para evitar que se salga del flujo del documento */
+    overflow: hidden;   /* Asegura que el contenido que exceda el contenedor se oculte */
+    margin: 10px;       /* Añade algo de espacio entre los elementos */
+}
+.preview-image {
+    width: 100%; /* La imagen ocupará todo el ancho del contenedor */
+    height: auto; /* La altura se ajustará proporcionalmente */
+    object-fit: contain; /* Ajusta la imagen sin recortarla ni distorsionarla */
+    display: block; /* Asegura que la imagen sea un bloque visible */
+}
+    .remove-image {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--rust-red);
+    color: white;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+    .svg-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    .alert-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .alert-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .alert-buttons {
+        margin-top: 20px;
+    }
+    .alert-button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .alert-confirm {
+        background-color: var(--rust-red);
+        color: white;
+    }
+    .alert-cancel {
+        background-color: var(--deep-blue);
+        color: white;
+    }
+    @media (min-width: 768px) {
+        .product-container {
+            flex-direction: row;
+        }
+        .product-image-container, .product-options {
+            flex: 1;
+        }
+    }
+</style>
+<script>
+     let basePrice = 129000;
+    let embroideryCount = 1;
+    let selectedPositions = ['Izquierda'];
+    let uploadedImages = [];
+    let selectedProduct = {};
+
+    // Recuperar y aplicar la información del producto seleccionado
+   
+
+
+    function updateTotalPrice() {
+        const totalPrice = basePrice + (embroideryCount * 30000);
+        document.getElementById('totalPrice').textContent = `Total: $ ${totalPrice.toLocaleString()}`;
+    }
+    
+    document.addEventListener('astro:page-load', () => {
+        const productImage = document.getElementById('productImage');
+        const embroideryCountButtons = document.querySelectorAll('#embroideryCount .option-button');
+        const embroideryPositionButtons = document.querySelectorAll('#embroideryPosition .option-button');
+        const fileInput = document.getElementById('fileInput');
+        const errorMessage = document.getElementById('errorMessage');
+        const previewImages = document.getElementById('previewImages');
+        const svgContainer = document.getElementById('svgContainer');
+        const cancelButton = document.getElementById('cancelButton');
+        const addToCartButton = document.getElementById('addToCartButton');
+        const buyNowButton = document.getElementById('buyNowButton');
+        const countError = document.getElementById('countError');
+        const positionError = document.getElementById('positionError');
+
+        const savedImageUrl = sessionStorage.getItem('selectedImageUrl');
+        if (savedImageUrl) {
+            productImage.src = savedImageUrl;
+        }
+        selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
+        if (selectedProduct) {
+            document.querySelector('h1').textContent = selectedProduct.title || 'CAMISETAS';
+            productImage.src = selectedProduct.imageUrl || '';
+            basePrice = parseInt(selectedProduct.price) || basePrice;
+            updateTotalPrice();
+        }
+
+        function updateEmbroideryCount(count) {
+            embroideryCount = count;
+            selectedPositions = [];
+            embroideryCountButtons.forEach(button => {
+                button.classList.toggle('active', button.dataset.count == count);
+            });
+            embroideryPositionButtons.forEach(button => button.classList.remove('active'));
+            updatePositionButtons();
+            updateSVGPositions();
+            updateTotalPrice();
+            fileInput.value = ''; // Resetea el input de archivos al cambiar el número de bordados
+            previewImages.innerHTML = ''; // Borra las imágenes cargadas
+        }
+
+        function updatePositionButtons() {
+            embroideryPositionButtons.forEach(button => {
+                button.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(button.dataset.position);
+                button.classList.remove('active');
+            });
+            selectedPositions.forEach(position => {
+                const button = Array.from(embroideryPositionButtons).find(btn => btn.dataset.position === position);
+                if (button) button.classList.add('active');
+            });
+        }
+
+        function togglePosition(position) {
+            if (selectedPositions.includes(position)) {
+                selectedPositions = selectedPositions.filter(p => p !== position);
+            } else if (selectedPositions.length < embroideryCount) {
+                selectedPositions.push(position);
+            }
+            updatePositionButtons();
+            updateSVGPositions();
+        }
+
+        function updateSVGPositions() {
+            svgContainer.innerHTML = '';
+            const positionMap = {
+                'Izquierda': { x: '20%', count: 0 },
+                'Centro': { x: '50%', count: 0 },
+                'Derecha': { x: '80%', count: 0 }
+            };
+
+            // Distribuir los SVGs entre las posiciones seleccionadas
+            for (let i = 0; i < embroideryCount; i++) {
+                const position = selectedPositions[i % selectedPositions.length];
+                positionMap[position].count++;
+            }
+
+            // Crear y posicionar los SVGs
+            for (const position in positionMap) {
+                const { x, count } = positionMap[position];
+                for (let i = 0; i < count; i++) {
+                    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    svg.setAttribute("width", "20");
+                    svg.setAttribute("height", "20");
+                    svg.setAttribute("viewBox", "0 0 20 20");
+                    svg.setAttribute("fill", "none");
+                    svg.innerHTML = '<circle cx="10" cy="10" r="10" fill="#BF472C" fill-opacity="0.58"/>';
+
+                    svg.style.position = 'absolute';
+                    svg.style.left = x;
+                    svg.style.top = `${20 + i * 25}%`; // Separación de 25% entre SVGs
+                    svgContainer.appendChild(svg);
+                }
+            }
+        }
+
+        function validateSelection() {
+            let isValid = true;
+            if (embroideryCount === 0) {
+                countError.textContent = 'Por favor, selecciona el número de bordados.';
+                isValid = false;
+            } else {
+                countError.textContent = '';
+            }
+            if (selectedPositions.length === 0) {
+                positionError.textContent = 'Por favor, selecciona al menos una posición para el bordado.';
+                isValid = false;
+            } else {
+                positionError.textContent = '';
+            }
+            if (uploadedImages.length !== embroideryCount) {
+                errorMessage.textContent = `Por favor, sube ${embroideryCount} imagen${embroideryCount > 1 ? 'es' : ''} para los bordados.`;
+                isValid = false;
+            } else {
+                errorMessage.textContent = '';
+            }
+            return isValid;
+        }
+
+        function showCancelAlert() {
+            const alertOverlay = document.createElement('div');
+            alertOverlay.className = 'alert-overlay';
+            alertOverlay.innerHTML = `
+                <div class="alert-box">
+                    <p>¿Estás seguro de que quieres cancelar? Tu selección no quedará guardada.</p>
+                    <div class="alert-buttons">
+                        <button class="alert-button alert-confirm">Sí, cancelar</button>
+                        <button class="alert-button alert-cancel">No, continuar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(alertOverlay);
+
+            alertOverlay.querySelector('.alert-confirm').addEventListener('click', () => {
+                history.back();
+            });
+
+            alertOverlay.querySelector('.alert-cancel').addEventListener('click', () => {
+                document.body.removeChild(alertOverlay);
+            });
+        }
+
+        embroideryCountButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateEmbroideryCount(parseInt(button.dataset.count));
+            });
+        });
+
+        embroideryPositionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                togglePosition(button.dataset.position);
+            });
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const files = Array.from(event.target.files);
+            errorMessage.textContent = '';
+            previewImages.innerHTML = '';
+            uploadedImages = [];
+
+            if (files.length > embroideryCount) {
+                errorMessage.textContent = `Solo puedes subir ${embroideryCount} imágenes.`;
+                return;
+            }
+
+            files.forEach(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    errorMessage.textContent = 'El archivo no debe superar los 10 MB';
+                    return;
+                }
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    errorMessage.textContent = 'Solo se permiten archivos JPG y PNG';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'preview-image-container';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('preview-image');
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-image';
+                    removeButton.textContent = 'X';
+                    removeButton.addEventListener('click', () => {
+                        previewImages.removeChild(imgContainer);
+                        uploadedImages = uploadedImages.filter(img => img !== e.target.result);
+                    });
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeButton);
+                    previewImages.appendChild(imgContainer);
+
+                    uploadedImages.push(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        cancelButton.addEventListener('click', showCancelAlert);
+
+        addToCartButton.addEventListener('click', () => {
+            if (validateSelection()) {
+                // Lógica para añadir al carrito
+                saveSelections();
+                console.log('Producto añadido al carrito');
+            }
+        });
+
+        buyNowButton.addEventListener('click', () => {
+            if (validateSelection()) {
+                // Lógica para finalizar la compra
+                saveSelections();
+                console.log('Finalizando compra');
+            }
+        });
+
+        function saveSelections() {
+            const unifiedData = {
+                ...selectedProduct,
+                embroideryCount,
+                selectedPositions,
+                uploadedImages,
+                basePrice,
+                totalPrice: basePrice + (embroideryCount - 1) * 30000
+            };
+            sessionStorage.setItem('unifiedProductData', JSON.stringify(unifiedData));
+        }
+
+        // Inicialización
+        updateEmbroideryCount(1);
+        updateSVGPositions();
+    });
+</script>

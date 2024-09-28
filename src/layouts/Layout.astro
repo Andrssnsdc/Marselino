@@ -3,8 +3,8 @@
 import '@fontsource-variable/glory';
 import '@fontsource/berkshire-swash';
 import Header from '../components/Header.astro';
-import Banner from '../components/Banner.astro';
 import Fondo from '../components/Fondo.astro';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
 	title: string;
@@ -23,6 +23,7 @@ const { title, description } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/logo/logo-marselino-black.svg" media="(prefers-color-scheme: light)"/>
 		<link rel="icon" type="image/svg+xml" href="/logo/logo-marselino-white.svg" media="(prefers-color-scheme: dark)"/>
 		<link rel="icon" type="image/svg+xml" href="/logo/logo-marselino-fondo.svg" />
+		<ViewTransitions />
 		<title>{title}</title>
 	</head>
 	<body>
