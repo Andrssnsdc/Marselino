@@ -33,7 +33,7 @@
                             <div class="error-message">Selecciona un color</div>
                         </div>
                         <div class="product-image">
-                            <img src="/images/camisa-hero.webp" alt="Camiseta" transition:name="product-image">
+                            <img src="/images/camisa-hero.webp" alt="Camiseta" transition:name="imagen-camiseta">
                         </div>
                     </div>
                 </div>
@@ -183,30 +183,30 @@
     }
 </style>
 
-<script>
+<script >
     // Definir la función para cambiar la imagen del producto
-    function changeProductImage(productCard, identifier) {
-    const productImage = productCard.querySelector('.product-image img');
-    if (!productImage) return;
+    function changeProductImage(productCard: HTMLElement, identifier: string): void {
+        const productImage = productCard.querySelector('.product-image img') as HTMLImageElement | null;
+        if (!productImage) return;
 
-    // Reemplaza {img} con el identificador único para formar la URL
-    const imageUrl = `./images/${identifier}.png`;
+        // Reemplaza {img} con el identificador único para formar la URL
+        const imageUrl = `./images/${identifier}.png`;
 
-    // Cambiar la imagen del producto
-    productImage.src = imageUrl;
+        // Cambiar la imagen del producto
+        productImage.src = imageUrl;
 
-    // Almacenar la URL de la imagen seleccionada de manera dinámica
-    sessionStorage.setItem('selectedImageUrl', imageUrl); // Cambiado a 'selectedImageUrl' para que coincida con la otra página
-}
+        // Almacenar la URL de la imagen seleccionada de manera dinámica
+        sessionStorage.setItem('selectedImageUrl', imageUrl);
+    }
 
     // Función para inicializar los eventos
-    function initializeEvents() {
-        const productCards = document.querySelectorAll('.product-card');
-        const sizeButtons = document.querySelectorAll('.size-button');
-        const colorButtons = document.querySelectorAll('.color-button');
-        const continueButtons = document.querySelectorAll('.continue-button');
+    function initializeEvents(): void {
+        const productCards = document.querySelectorAll<HTMLElement>('.product-card');
+        const sizeButtons = document.querySelectorAll<HTMLElement>('.size-button');
+        const colorButtons = document.querySelectorAll<HTMLElement>('.color-button');
+        const continueButtons = document.querySelectorAll<HTMLElement>('.continue-button');
 
-        function adjustLayout() {
+        function adjustLayout(): void {
             const isMobile = window.innerWidth < 768;
             productCards.forEach(card => {
                 if (isMobile) {
@@ -214,15 +214,15 @@
                     card.style.flex = '1';
                 } else {
                     card.style.flex = '1';
-                    const productDetails = card.querySelector('.product-details');
-                    const continueButton = card.querySelector('.continue-button');
+                    const productDetails = card.querySelector<HTMLElement>('.product-details');
+                    const continueButton = card.querySelector<HTMLElement>('.continue-button');
                     if (productDetails) productDetails.style.display = 'flex';
                     if (continueButton) continueButton.style.display = 'block';
                 }
             });
         }
 
-        function expandCard(card) {
+        function expandCard(card: HTMLElement): void {
             const isMobile = window.innerWidth < 768;
             if (isMobile) {
                 productCards.forEach(c => c.classList.remove('expanded'));
@@ -236,14 +236,14 @@
         adjustLayout();
 
         productCards.forEach(card => {
-            card.addEventListener('click', function() { expandCard(this); });
-            card.addEventListener('mouseenter', function() { expandCard(this); });
+            card.addEventListener('click', function(this: HTMLElement) { expandCard(this); });
+            card.addEventListener('mouseenter', function(this: HTMLElement) { expandCard(this); });
         });
 
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function(event: MouseEvent) {
             let clickedInsideCard = false;
             productCards.forEach(card => {
-                if (card.contains(event.target)) {
+                if (card.contains(event.target as Node)) {
                     clickedInsideCard = true;
                 }
             });
@@ -256,58 +256,59 @@
             }
         });
 
-        function clearError(parent) {
+        function clearError(parent: HTMLElement): void {
             parent.classList.remove('error');
-            const errorMessage = parent.nextElementSibling;
+            const errorMessage = parent.nextElementSibling as HTMLElement | null;
             if (errorMessage) errorMessage.style.display = 'none';
         }
 
         sizeButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function(this: HTMLElement, e: Event) {
                 e.stopPropagation();
                 const parent = this.closest('.options-box');
                 if (!parent) return;
-                parent.querySelectorAll('.size-button').forEach(btn => btn.classList.remove('selected'));
+                parent.querySelectorAll<HTMLElement>('.size-button').forEach(btn => btn.classList.remove('selected'));
                 this.classList.add('selected');
                 clearError(parent);
             });
         });
 
         colorButtons.forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const parent = this.closest('.options-box');
-        if (!parent) return;
-        parent.querySelectorAll('.color-button').forEach(btn => btn.classList.remove('selected'));
-        this.classList.add('selected');
-        clearError(parent);
+            button.addEventListener('click', function(this: HTMLElement, e: Event) {
+                e.stopPropagation();
+                const parent = this.closest('.options-box');
+                if (!parent) return;
+                parent.querySelectorAll<HTMLElement>('.color-button').forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                clearError(parent);
 
-        // Obtener el identificador único del botón
-        const identifier = this.getAttribute('data-identifier');
-        
-        // Obtener la tarjeta del producto y cambiar la imagen según el identificador
-        const productCard = this.closest('.product-card');
-        if (productCard && identifier) {
-            changeProductImage(productCard, identifier);
-        }
-    });
-});
+                // Obtener el identificador único del botón
+                const identifier = this.getAttribute('data-identifier');
+                
+                // Obtener la tarjeta del producto y cambiar la imagen según el identificador
+                const productCard = this.closest('.product-card');
+                if (productCard && identifier) {
+                    changeProductImage(productCard, identifier);
+                }
+            });
+        });
+
         continueButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function(this: HTMLElement, e: Event) {
                 e.stopPropagation();
                 const productCard = this.closest('.product-card');
                 if (!productCard) return;
 
-                const sizeBox = productCard.querySelector('.options-column:nth-child(1) .options-box');
-                const colorBox = productCard.querySelector('.options-column:nth-child(2) .options-box');
-                const selectedSize = sizeBox?.querySelector('.size-button.selected');
-                const selectedColor = colorBox?.querySelector('.color-button.selected');
+                const sizeBox = productCard.querySelector<HTMLElement>('.options-column:nth-child(1) .options-box');
+                const colorBox = productCard.querySelector<HTMLElement>('.options-column:nth-child(2) .options-box');
+                const selectedSize = sizeBox?.querySelector<HTMLElement>('.size-button.selected');
+                const selectedColor = colorBox?.querySelector<HTMLElement>('.color-button.selected');
 
                 let isValid = true;
 
                 if (!selectedSize && sizeBox) {
                     sizeBox.classList.add('error');
-                    const errorMessage = sizeBox.nextElementSibling;
+                    const errorMessage = sizeBox.nextElementSibling as HTMLElement | null;
                     if (errorMessage) errorMessage.style.display = 'block';
                     isValid = false;
                 } else if (sizeBox) {
@@ -316,7 +317,7 @@
 
                 if (!selectedColor && colorBox) {
                     colorBox.classList.add('error');
-                    const errorMessage = colorBox.nextElementSibling;
+                    const errorMessage = colorBox.nextElementSibling as HTMLElement | null;
                     if (errorMessage) errorMessage.style.display = 'block';
                     isValid = false;
                 } else if (colorBox) {
@@ -325,7 +326,7 @@
 
                 if (isValid && selectedSize && selectedColor) {
                     const productTitle = productCard.querySelector('.product-title')?.textContent || '';
-                    const productImage = productCard.querySelector('.product-image img');
+                    const productImage = productCard.querySelector<HTMLImageElement>('.product-image img');
                     
                     const productData = {
                         title: productTitle,

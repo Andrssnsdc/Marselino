@@ -4,7 +4,7 @@
         <h1>CAMISETAS</h1>
         <div class="product-container">
             <div class="product-image-container">
-                <img src="" alt="Camiseta" id="productImage" transition:name="product-image">
+                <img src="" alt="Camiseta" id="productImage" transition:name="imagen-camiseta">
                 <div class="svg-container" id="svgContainer"></div>
                 <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
             </div>
@@ -330,7 +330,47 @@
     .alert-buttons .add-to-cart:hover {
         background-color: #1e2f8f;
     }
+    .success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    border-radius: 4px;
+    z-index: 1000;
+  }
 
+  .status-indicator {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background-color: rgba(0, 255, 0, 0.7);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-indicator.failed {
+    background-color: rgba(255, 0, 0, 0.7);
+}
+  @keyframes flyToCart {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(calc(100vw - 100%), calc(-100vh + 100%)) scale(0.1);
+            opacity: 0;
+        }
+    }
+
+    .flying-item {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+    }
     @media (min-width: 768px) {
         .product-container {
             flex-direction: row;
@@ -363,271 +403,382 @@
 </style>
 
 <script>
-    interface ProductData {
-        title?: string;
-        imageUrl?: string;
-        price?: string;
+  interface ProductData {
+    title?: string;
+    imageUrl?: string;
+    price?: string;
+    color?: string;
+    size?: string;
+    embroideryCount?: number;
+    selectedPositions?: string[];
+    uploadedImages?: string[];
+    basePrice?: number;
+    totalPrice?: number;
+    quantity?: number;
+}
+
+let basePrice: number = 129000;
+let embroideryCount: number = 1;
+let selectedPositions: string[] = ['Izquierda'];
+let uploadedImages: string[] = [];
+let selectedProduct: ProductData = {};
+
+function initializeComponent() {
+    const productImage = document.getElementById('productImage') as HTMLImageElement;
+    const embroideryCountButtons = document.querySelectorAll('#embroideryCount .option-button');
+    const embroideryPositionButtons = document.querySelectorAll('#embroideryPosition .option-button');
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+    const previewImages = document.getElementById('previewImages') as HTMLDivElement;
+    const svgContainer = document.getElementById('svgContainer') as HTMLDivElement;
+    const cancelButton = document.getElementById('cancelButton') as HTMLButtonElement;
+    const addToCartButton = document.getElementById('addToCartButton') as HTMLButtonElement;
+    const buyNowButton = document.getElementById('buyNowButton') as HTMLButtonElement;
+    const countError = document.getElementById('countError') as HTMLDivElement;
+    const positionError = document.getElementById('positionError') as HTMLDivElement;
+
+    const savedImageUrl = sessionStorage.getItem('selectedImageUrl');
+    if (savedImageUrl) {
+        productImage.src = savedImageUrl;
+    }
+    selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
+    if (selectedProduct) {
+        const titleElement = document.querySelector('h1');
+        if (titleElement) titleElement.textContent = selectedProduct.title || 'CAMISETAS';
+        productImage.src = selectedProduct.imageUrl || '';
+        basePrice = parseInt(selectedProduct.price || '') || basePrice;
+        updateTotalPrice();
     }
 
-    let basePrice: number = 129000;
-    let embroideryCount: number = 1;
-    let selectedPositions: string[] = ['Izquierda'];
-    let uploadedImages: string[] = [];
-    let selectedProduct: ProductData = {};
-
-    function initializeComponent() {
-        const productImage = document.getElementById('productImage') as HTMLImageElement;
-        const embroideryCountButtons = document.querySelectorAll('#embroideryCount .option-button');
-        const embroideryPositionButtons = document.querySelectorAll('#embroideryPosition .option-button');
-        const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-        const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
-        const previewImages = document.getElementById('previewImages') as HTMLDivElement;
-        const svgContainer = document.getElementById('svgContainer') as HTMLDivElement;
-        const cancelButton = document.getElementById('cancelButton') as HTMLButtonElement;
-        const addToCartButton = document.getElementById('addToCartButton') as HTMLButtonElement;
-        const buyNowButton = document.getElementById('buyNowButton') as HTMLButtonElement;
-        const countError = document.getElementById('countError') as HTMLDivElement;
-        const positionError = document.getElementById('positionError') as HTMLDivElement;
-
-        const savedImageUrl = sessionStorage.getItem('selectedImageUrl');
-        if (savedImageUrl) {
-            productImage.src = savedImageUrl;
+    function updateTotalPrice() {
+        const totalPrice = basePrice + ((embroideryCount - 1) * 30000);
+        const totalPriceElement = document.getElementById('totalPrice');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = `Total: $ ${totalPrice.toLocaleString()}`;
         }
-        selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
-        if (selectedProduct) {
-            const titleElement = document.querySelector('h1');
-            if (titleElement) titleElement.textContent = selectedProduct.title || 'CAMISETAS';
-            productImage.src = selectedProduct.imageUrl || '';
-            basePrice = parseInt(selectedProduct.price || '') || basePrice;
-            updateTotalPrice();
-        }
+    }
 
-        function updateTotalPrice() {
-            const totalPrice = basePrice + ((embroideryCount - 1) * 30000);
-            const totalPriceElement = document.getElementById('totalPrice');
-            if (totalPriceElement) {
-                totalPriceElement.textContent = `Total: $ ${totalPrice.toLocaleString()}`;
-            }
-        }
-
-        function updateEmbroideryCount(count: number) {
-            embroideryCount = count;
-            selectedPositions = selectedPositions.slice(0, count);
-            embroideryCountButtons.forEach(button => {
-                button.classList.toggle('active', (button as HTMLButtonElement).dataset.count == count.toString());
-            });
-            updatePositionButtons();
-            updateSVGPositions();
-            updateTotalPrice();
-            
-            while (uploadedImages.length > count) {
-                uploadedImages.pop();
-                if (previewImages.lastChild) {
-                    previewImages.removeChild(previewImages.lastChild);
-                }
-            }
-        }
-
-        function updatePositionButtons() {
-            embroideryPositionButtons.forEach(button => {
-                const btnElement = button as HTMLButtonElement;
-                btnElement.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(btnElement.dataset.position || '');
-                btnElement.classList.remove('active');
-            });
-            selectedPositions.forEach(position => {
-                const button = Array.from(embroideryPositionButtons).find(btn => (btn as HTMLButtonElement).dataset.position === position);
-                if (button) button.classList.add('active');
-            });
-        }
-
-        function togglePosition(position: string) {
-            if (selectedPositions.includes(position)) {
-                selectedPositions = selectedPositions.filter(p => p !== position);
-            } else if (selectedPositions.length < embroideryCount) {
-                selectedPositions.push(position);
-            }
-            updatePositionButtons();
-            updateSVGPositions();
-        }
-
-        function updateSVGPositions() {
-            svgContainer.innerHTML = '';
-            const positionMap: {[key: string]: {x: string, count: number}} = {
-                'Izquierda': { x: '20%', count: 0 },
-                'Centro': { x: '50%', count: 0 },
-                'Derecha': { x: '80%', count: 0 }
-            };
-
-            for (let i = 0; i < embroideryCount; i++) {
-                const position = selectedPositions[i % selectedPositions.length];
-                positionMap[position].count++;
-            }
-
-            for (const position in positionMap) {
-                const { x, count } = positionMap[position];
-                for (let i = 0; i < count; i++) {
-                    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    svg.setAttribute("width", "20");
-                    svg.setAttribute("height", "20");
-                    svg.setAttribute("viewBox", "0 0 20 20");
-                    svg.setAttribute("fill", "none");
-                    svg.innerHTML = '<circle cx="10" cy="10" r="10" fill="#BF472C" fill-opacity="0.58"/>';
-
-                    svg.style.position = 'absolute';
-                    svg.style.left = x;
-                    svg.style.top = `${20 + i * 25}%`;
-                    svgContainer.appendChild(svg);
-                }
-            }
-        }
-
-        function validateSelection(): boolean {
-            let isValid = true;
-            if (embroideryCount === 0) {
-                countError.textContent = 'Por favor, selecciona el número de bordados.';
-                isValid = false;
-            } else {
-                countError.textContent = '';
-            }
-            if (selectedPositions.length === 0) {
-                positionError.textContent = 'Por favor, selecciona al menos una posición para el bordado.';
-                isValid = false;
-            } else {
-                positionError.textContent = '';
-            }
-            if (uploadedImages.length !== embroideryCount) {
-                errorMessage.textContent = `Por favor, sube ${embroideryCount} imagen${embroideryCount > 1 ? 'es' : ''} para los bordados.`;
-                isValid = false;
-            } else {
-                errorMessage.textContent = '';
-            }
-            return isValid;
-        }
-
-        function showCancelAlert() {
-            const alertOverlay = document.createElement('div');
-            alertOverlay.className = 'alert-overlay';
-            alertOverlay.innerHTML = `
-                <div class="alert-box">
-                    <p>¿Estás seguro de que quieres cancelar? Tu selección no quedará guardada.</p>
-                    <div class="alert-buttons">
-                        <button id="alert-confirm" class="action-button cancel">Sí, cancelar</button>
-                        <button id="alert-cancel" class="action-button add-to-cart">No, continuar</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(alertOverlay);
-
-            const confirmButton = alertOverlay.querySelector('#alert-confirm');
-            if (confirmButton) {
-                confirmButton.addEventListener('click', () => {
-                    window.location.href = '/';
-                });
-            }
-
-            const cancelAlertButton = alertOverlay.querySelector('#alert-cancel');
-            if (cancelAlertButton) {
-                cancelAlertButton.addEventListener('click', () => {
-                    document.body.removeChild(alertOverlay);
-                });
-            }
-        }
-
+    function updateEmbroideryCount(count: number) {
+        embroideryCount = count;
+        selectedPositions = selectedPositions.slice(0, count);
         embroideryCountButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const count = parseInt((button as HTMLButtonElement).dataset.count || '1');
-                updateEmbroideryCount(count);
-            });
+            button.classList.toggle('active', (button as HTMLButtonElement).dataset.count == count.toString());
         });
+        updatePositionButtons();
+        updateSVGPositions();
+        updateTotalPrice();
+        
+        while (uploadedImages.length > count) {
+            uploadedImages.pop();
+            if (previewImages.lastChild) {
+                previewImages.removeChild(previewImages.lastChild);
+            }
+        }
+    }
 
+    function updatePositionButtons() {
         embroideryPositionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const position = (button as HTMLButtonElement).dataset.position;
-                if (position) togglePosition(position);
-            });
+            const btnElement = button as HTMLButtonElement;
+            btnElement.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(btnElement.dataset.position || '');
+            btnElement.classList.remove('active');
         });
+        selectedPositions.forEach(position => {
+            const button = Array.from(embroideryPositionButtons).find(btn => (btn as HTMLButtonElement).dataset.position === position);
+            if (button) button.classList.add('active');
+        });
+    }
 
-        fileInput.addEventListener('change', (event) => {
-            const files = Array.from((event.target as HTMLInputElement).files || []);
+    function togglePosition(position: string) {
+        if (selectedPositions.includes(position)) {
+            selectedPositions = selectedPositions.filter(p => p !== position);
+        } else if (selectedPositions.length < embroideryCount) {
+            selectedPositions.push(position);
+        }
+        updatePositionButtons();
+        updateSVGPositions();
+    }
+
+    function updateSVGPositions() {
+        svgContainer.innerHTML = '';
+        const positionMap: {[key: string]: {x: string, count: number}} = {
+            'Izquierda': { x: '20%', count: 0 },
+            'Centro': { x: '50%', count: 0 },
+            'Derecha': { x: '80%', count: 0 }
+        };
+
+        for (let i = 0; i < embroideryCount; i++) {
+            const position = selectedPositions[i % selectedPositions.length];
+            positionMap[position].count++;
+        }
+
+        for (const position in positionMap) {
+            const { x, count } = positionMap[position];
+            for (let i = 0; i < count; i++) {
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("width", "20");
+                svg.setAttribute("height", "20");
+                svg.setAttribute("viewBox", "0 0 20 20");
+                svg.setAttribute("fill", "none");
+                svg.innerHTML = '<circle cx="10" cy="10" r="10" fill="#BF472C" fill-opacity="0.58"/>';
+
+                svg.style.position = 'absolute';
+                svg.style.left = x;
+                svg.style.top = `${20 + i * 25}%`;
+                svgContainer.appendChild(svg);
+            }
+        }
+    }
+
+    function validateSelection(): boolean {
+        let isValid = true;
+        if (embroideryCount === 0) {
+            countError.textContent = 'Por favor, selecciona el número de bordados.';
+            isValid = false;
+        } else {
+            countError.textContent = '';
+        }
+        if (selectedPositions.length === 0) {
+            positionError.textContent = 'Por favor, selecciona al menos una posición para el bordado.';
+            isValid = false;
+        } else {
+            positionError.textContent = '';
+        }
+        if (uploadedImages.length !== embroideryCount) {
+            errorMessage.textContent = `Por favor, sube ${embroideryCount} imagen${embroideryCount > 1 ? 'es' : ''} para los bordados.`;
+            isValid = false;
+        } else {
             errorMessage.textContent = '';
+        }
+        return isValid;
+    }
 
-            if (files.length > embroideryCount - uploadedImages.length) {
-                errorMessage.textContent = ` Puedes cargar ${embroideryCount - uploadedImages.length} fotos más.`;
-                return;
-            }
+    function showCancelAlert() {
+        const alertOverlay = document.createElement('div');
+        alertOverlay.className = 'alert-overlay';
+        alertOverlay.innerHTML = `
+            <div class="alert-box">
+                <p>¿Estás seguro de que quieres cancelar? Tu selección no quedará guardada.</p>
+                <div class="alert-buttons">
+                    <button id="alert-confirm" class="action-button cancel">Sí, cancelar</button>
+                    <button id="alert-cancel" class="action-button add-to-cart">No, continuar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(alertOverlay);
 
-            files.forEach(file => {
-                if (file.size > 10 * 1024 * 1024) {
-                    errorMessage.textContent = 'El archivo no debe superar los 10 MB';
-                    return;
-                }
-                if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                    errorMessage.textContent = 'Solo se permiten archivos JPG y PNG';
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    if (uploadedImages.length < embroideryCount && e.target) {
-                        const imgContainer = document.createElement('div');
-                        imgContainer.className = 'preview-image-container';
-                        
-                        const img = document.createElement('img');
-                        img.src = e.target.result as string;
-                        img.classList.add('preview-image');
-                        
-                        const removeButton = document.createElement('button');
-                        removeButton.className = 'remove-image';
-                        removeButton.textContent = 'X';
-                        removeButton.addEventListener('click', () => {
-                            previewImages.removeChild(imgContainer);
-                            uploadedImages = uploadedImages.filter(img => img !== e.target?.result);
-                        });
-                        
-                        imgContainer.appendChild(img);
-                        imgContainer.appendChild(removeButton);
-                        previewImages.appendChild(imgContainer);
-
-                        uploadedImages.push(e.target.result as string);
-                    }
-                };
-                reader.readAsDataURL(file);
+        const confirmButton = alertOverlay.querySelector('#alert-confirm');
+        if (confirmButton) {
+            confirmButton.addEventListener('click', () => {
+                window.location.href = '/';
             });
-        });
+        }
 
-        cancelButton.addEventListener('click', showCancelAlert);
+        const cancelAlertButton = alertOverlay.querySelector('#alert-cancel');
+        if (cancelAlertButton) {
+            cancelAlertButton.addEventListener('click', () => {
+                document.body.removeChild(alertOverlay);
+            });
+        }
+    }
 
-        addToCartButton.addEventListener('click', () => {
-            if (validateSelection()) {
-                saveSelections();
-                console.log('Producto añadido al carrito');
-            }
-        });
+    function updateCartCount() {
+        const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+        const cartCount = document.getElementById('cartCount') as HTMLElement;
+        if (cartCount) {
+            cartCount.textContent = cart.length.toString();
+        }
+    }
 
-        buyNowButton.addEventListener('click', () => {
-            if (validateSelection()) {
-                saveSelections();
-                console.log('Finalizando compra');
-            }
-        });
-
-        function saveSelections() {
-            const unifiedData = {
+    function addToCart(finishPurchase: boolean = false) {
+        if (validateSelection()) {
+            const productData: ProductData = {
                 ...selectedProduct,
                 embroideryCount,
                 selectedPositions,
                 uploadedImages,
                 basePrice,
-                totalPrice: basePrice + (embroideryCount - 1) * 30000
+                totalPrice: basePrice + (embroideryCount - 1) * 30000,
+                quantity: 1
             };
-            sessionStorage.setItem('unifiedProductData', JSON.stringify(unifiedData));
-        }
 
+            let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+            cart.push(productData);
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+
+            updateCartCount();
+            showSuccessMessage('Producto añadido al carrito');
+            animateAddToCart();
+
+            setTimeout(() => {
+                closePersonalizationWithAnimation();
+                resetSelection();
+                if (finishPurchase) {
+                    openCart();
+                } else {
+                    window.history.back();
+                }
+            }, 1000);
+        }
+    }
+
+    function animateAddToCart() {
+        const productImage = document.getElementById('productImage') as HTMLImageElement;
+        const flyingItem = productImage.cloneNode() as HTMLImageElement;
+        flyingItem.className = 'flying-item';
+        flyingItem.style.position = 'fixed';
+        const rect = productImage.getBoundingClientRect();
+        flyingItem.style.left = `${rect.left}px`;
+        flyingItem.style.top = `${rect.top}px`;
+        flyingItem.style.width = `${rect.width}px`;
+        flyingItem.style.height = `${rect.height}px`;
+        document.body.appendChild(flyingItem);
+
+        flyingItem.animate([
+            { transform: 'scale(1)', opacity: 1 },
+            { transform: 'translate(calc(100vw - 100%), calc(-100vh + 100%)) scale(0.1)', opacity: 0 }
+        ], {
+            duration: 1000,
+            easing: 'ease-in-out'
+        }).onfinish = () => {
+            document.body.removeChild(flyingItem);
+        };
+    }
+
+    function closePersonalizationWithAnimation() {
+        const personalizationContainer = document.querySelector('.fullscreen-section') as HTMLElement;
+        personalizationContainer.style.transition = 'opacity 0.5s ease-out';
+        personalizationContainer.style.opacity = '0';
+        setTimeout(() => {
+            personalizationContainer.style.display = 'none';
+        }, 500);
+    }
+
+    function resetSelection() {
+        embroideryCount = 1;
+        selectedPositions = ['Izquierda'];
+        uploadedImages = [];
         updateEmbroideryCount(1);
         updateSVGPositions();
         updateTotalPrice();
+        previewImages.innerHTML = '';
+        errorMessage.textContent = '';
+        countError.textContent = '';
+        positionError.textContent = '';
+        if (fileInput) fileInput.value = '';
     }
 
-    document.addEventListener('astro:page-load', initializeComponent);
-    document.addEventListener('astro:after-swap', initializeComponent);
-</script>
+    function openCart() {
+        const cartButton = document.getElementById('openCart') as HTMLElement;
+        if (cartButton) {
+            cartButton.click();
+        }
+    }
+
+    function showSuccessMessage(message: string) {
+        const successMessage = document.createElement('div');
+        successMessage.className = 'success-message';
+        successMessage.textContent = message;
+        document.body.appendChild(successMessage);
+        setTimeout(() => {
+            document.body.removeChild(successMessage);
+        }, 3000);
+    }
+
+    embroideryCountButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const count = parseInt((button as HTMLButtonElement).dataset.count || '1');
+            updateEmbroideryCount(count);
+        });
+    });
+
+    embroideryPositionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const position = (button as HTMLButtonElement).dataset.position;
+            if (position) togglePosition(position);
+        });
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        const files = Array.from((event.target as HTMLInputElement).files || []);
+        errorMessage.textContent = '';
+
+        if (files.length > embroideryCount - uploadedImages.length) {
+            errorMessage.textContent = `Solo puedes subir ${embroideryCount - uploadedImages.length} imágenes máximo.`;
+            return;
+        }
+
+        files.forEach(file => {
+            if (file.size > 10 * 1024 * 1024) {
+                errorMessage.textContent = 'El archivo no debe superar los 10 MB';
+                return;
+            }
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                errorMessage.textContent = 'Solo se permiten archivos JPG y PNG';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (uploadedImages.length < embroideryCount && e.target) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'preview-image-container';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result as string;
+                    img.classList.add('preview-image');
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-image';
+                    removeButton.textContent = 'X';
+                    removeButton.addEventListener('click', () => {
+                        previewImages.removeChild(imgContainer);
+                        uploadedImages = uploadedImages.filter(img => img !== e.target?.result);
+                    });
+                    
+                    const statusIndicator = document.createElement('div');
+                    statusIndicator.className = 'status-indicator';
+                    statusIndicator.textContent = 'Cargada';
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeButton);
+                    imgContainer.appendChild(statusIndicator);
+                    previewImages.appendChild(imgContainer);
+
+                    uploadedImages.push(e.target.result as string);
+                }
+            };
+            reader.onerror = () => {
+                const failedIndicator = document.createElement('div');
+                failedIndicator.className = 'status-indicator failed';
+                failedIndicator.textContent = 'Error al cargar';
+                previewImages.appendChild(failedIndicator);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    cancelButton.addEventListener('click', showCancelAlert);
+    addToCartButton.addEventListener('click', () => addToCart(false));
+    buyNowButton.addEventListener('click', () => addToCart(true));
+
+    // Inicialización
+    updateEmbroideryCount(1);
+    updateSVGPositions();
+    updateTotalPrice();
+    updateCartCount();
+}
+
+// Usar el evento 'astro:page-load' para la carga inicial y las navegaciones posteriores
+document.addEventListener('astro:page-load', initializeComponent);
+
+// Actualizar el carrito cuando cambia el almacenamiento de sesión
+window.addEventListener('storage', (event) => {
+    if (event.key === 'cart') {
+        const cartCount = document.getElementById('cartCount') as HTMLElement;
+        if (cartCount) {
+            const cart = JSON.parse(event.newValue || '[]');
+            cartCount.textContent = cart.length.toString();
+        }
+    }
+});
+  </script>
