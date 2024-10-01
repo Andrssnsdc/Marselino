@@ -2,7 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Banner from '../components/Banner.astro';
 import Intrucciones from '../components/Intrucciones.astro'
-import Productos from '../components/Productos.astro'
+import ProductSelector from '../components/ProductSelector.astro';
+
 
 ---
 
@@ -10,7 +11,64 @@ import Productos from '../components/Productos.astro'
 	<main>
 		<Banner/>
 		<Intrucciones />
-		<Productos />	
+		<section class="container">
+			<h3>Elige tu favorito</h3>
+			<div class="products">
+				<ProductSelector 
+				title="CAMISETA"
+				subtitle="Desde $89.000"
+				price= {89.900}
+				description="Incluye 1 bordado personalizado"
+				backgroundClass="var(--medium-blue)"
+				productImage="/images/CAMISETA.png"
+				colors={[
+				  {name: "cafe", hex: "#5f342a"},
+				  {name: "verde", hex: "#4d5d50"},
+				  {name: "azul", hex: "#8da1fa"},
+				  {name: "amarillo", hex: "#d1d875"},
+				  {name: "rosa", hex: "#c37bbe"}
+				]}
+				sizeGuideImage="https://cdn.shopify.com/s/files/1/0641/0859/3400/files/GUIA-DE-TALLAS-CAMISETAS-DAMA_10d4b4d6-2626-40fa-a2b3-d249bb6feb7a_480x480.jpg?v=1658267246"
+			  />
+			  <ProductSelector 
+				title="BUZO"
+				subtitle="Desde $139.000"
+				price= {139.900}
+				description="Incluye 1 bordado personalizado"
+				backgroundClass="var(--rust-red)"
+				productImage="/images/BUZO.png"
+				colors={[
+				  {name: "cafe", hex: "#5f342a"},
+				  {name: "verde", hex: "#4d5d50"},
+				  {name: "azul", hex: "#8da1fa"},
+				  {name: "amarillo", hex: "#d1d875"},
+				  {name: "rosa", hex: "#c37bbe"}
+				]}
+				sizeGuideImage="https://cdn.shopify.com/s/files/1/0641/0859/3400/files/GUIA-DE-TALLAS-CAMISETAS-DAMA_10d4b4d6-2626-40fa-a2b3-d249bb6feb7a_480x480.jpg?v=1658267246"
+			  />
+			</div>
+		  </section>
 	</main>
+	<style>
+		.container { 
+    max-width: 75vw; 
+    margin: 0 auto; 
+	padding: 0;
+  }
+  .products { 
+    display: flex; 
+    gap: 20px; 
+  } @media (max-width: 1080px){
+	.container{max-width: 90vw;}
+  }
+  @media (max-width: 767px) {
+    .container { 
+      max-width: 90vw; 
+    }
+    .products { 
+      flex-direction: column; 
+    }
+  }
+	  </style>
 </Layout>
 
