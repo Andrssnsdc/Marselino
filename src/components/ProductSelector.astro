@@ -1,6 +1,7 @@
 ---
 // ProductSelector.astro
 import { Image } from 'astro:assets';
+import { navigate } from 'astro:transitions/client';
 
 interface Props {
   title: string;
@@ -33,13 +34,13 @@ const {
 const productId = `product-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
-<article class={`product-card ${backgroundClass}`} id={productId}>
+<article class={`product-card ${backgroundClass}`} id={productId} transition:name={`product-card-${productId}`}>
   <div class="product-content">
     <header class="product-header">
       <h3 class="product-title" transition:name={`title-${productId}`}>{title}</h2>
-      <h4 class="product-subtitle" transition:name={`subtitle-${productId}`}>{subtitle}</h3>
+      <h4 class="product-subtitle" >{subtitle}</h3>
     </header>
-    <p class="product-description" transition:name={`description-${productId}`}>{description}</p>
+    <p class="product-description" >{description}</p>
     <div class="product-details">
       <div class="options-container">
         <div class="options-column">
@@ -300,7 +301,7 @@ const productId = `product-${Math.random().toString(36).substr(2, 9)}`;
   }
 </style>
 
-<script define:vars={{ productId, title, price }}>
+<script define:vars={{ productId, title, price, backgroundClass }}>
 document.addEventListener('astro:page-load', () => {
   const productCard = document.getElementById(productId);
   if (!productCard) return;
@@ -355,17 +356,24 @@ if (!selectedColor) {
   isValid = false;
 }
 
-    if (isValid) {
-      const productData = {
-        title: title,
-        price: price,
-        size: selectedSize.textContent,
-        color: selectedColor.dataset.identifier,
-        imageUrl: productCard.querySelector('.product-image img').src
-      };
-      sessionStorage.setItem('selectedProduct', JSON.stringify(productData));
-      window.location.href = '/personalization';
-    }
+if (isValid) {
+  const productData = {
+    title: encodeURIComponent(title),
+    price: price,
+    size: selectedSize.textContent,
+    color: selectedColor.dataset.identifier,
+    imageUrl: encodeURIComponent(productCard.querySelector('.product-image img').src),
+    productId: productId,
+    backgroundClass: backgroundClass
+  };
+  
+  const url = new URL('/personalization', window.location.origin);
+  Object.keys(productData).forEach(key => 
+    url.searchParams.append(key, productData[key])
+  );
+  
+  window.location.href = url.toString();
+}
   });
 
   sizeGuideButton.addEventListener('click', (e) => {

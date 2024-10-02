@@ -1,14 +1,35 @@
+---
+// personalization.astro
+import { Image } from 'astro:assets';
+// Obtener los datos del producto desde los parámetros de la URL
+const urlParams = Astro.url.searchParams;
+const productId = urlParams.get('productId') || 'default-product-id';
+const title = urlParams.get('title') || 'Producto';
+const imageUrl = urlParams.get('imageUrl') || '';
+const price = urlParams.get('price') || '129000';
+const color = urlParams.get('color') || 'default-color';
+const size = urlParams.get('size') || 'M';
+const backgroundClass = urlParams.get('backgroundClass') || '--medium-blue';
+
+
+// Decodificar los valores que pueden contener caracteres especiales
+const decodedTitle = decodeURIComponent(title);
+const decodedImageUrl = decodeURIComponent(imageUrl);
+const initialPrice = parseInt(price);
+const decodedBackgroundClass = decodeURIComponent(backgroundClass);
+
+---
 
 <section class="fullscreen-section">
     <div class="container">
-        <h3>CAMISETAS</h3>
+        <h3 transition:name={`title-${productId}`}>Personaliza tu {decodedTitle}</h3>
         <div class="product-container">
             <div class="product-image-container">
-                <img src="" alt="Camiseta" id="productImage" transition:name="imagen-camiseta">
+                <img src={decodedImageUrl} alt={decodedTitle} id="productImage" transition:name={`image-${productId}`}>
                 <div class="svg-container" id="svgContainer"></div>
                 <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
             </div>
-            <div class="product-options">
+            <div class={`product-options ${decodedBackgroundClass}`} transition:name={`product-card-${productId}`}>
                 <div class="option-group">
                     <div class="option-title">¿Cuántos bordados quieres?</div>
                     <div class="option-buttons" id="embroideryCount">
@@ -33,7 +54,7 @@
                     <div class="error-message" id="errorMessage"></div>
                     <div class="preview-images" id="previewImages"></div>
                 </div>
-                <div class="total" id="totalPrice">Total: $ 129.000</div>
+                <div class="total" id="totalPrice">Total: $ {initialPrice.toLocaleString()}</div>
                 <div class="action-buttons">
                     <button class="action-button add-to-cart" id="addToCartButton">Añadir al carrito</button>
                     <button class="action-button cancel" id="cancelButton">Cancelar</button>
@@ -44,7 +65,8 @@
     </div>
 </section>
 
-<style is:global>
+
+<style is:global define:vars={{ backgroundClass }} >
 
  
     h1{
@@ -94,7 +116,7 @@
     }
 
     .product-options {
-        background-color: var(--medium-blue);
+        background-color: var(--backgroundClass);
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
@@ -403,27 +425,48 @@
 </style>
 
 <script>
-  interface ProductData {
-    title?: string;
-    imageUrl?: string;
-    price?: string;
-    color?: string;
-    size?: string;
-    embroideryCount?: number;
-    selectedPositions?: string[];
-    uploadedImages?: string[];
-    basePrice?: number;
-    totalPrice?: number;
-    quantity?: number;
+    interface ProductData {
+    title: string;
+    imageUrl: string;
+    price: number;
+    color: string;
+    size: string;
+    embroideryCount: number;
+    selectedPositions: string[];
+    uploadedImages: string[];
+    basePrice: number;
+    totalPrice: number;
+    quantity: number;
+    productId: string;
+    backgroundClass: string;
 }
 
-let basePrice: number = 129000;
+let basePrice: number;
 let embroideryCount: number = 1;
 let selectedPositions: string[] = ['Izquierda'];
 let uploadedImages: string[] = [];
-let selectedProduct: ProductData = {};
+let selectedProduct: ProductData;
 
 function initializeComponent() {
+    const urlParams = new URLSearchParams(window.location.search);
+    selectedProduct = {
+        title: decodeURIComponent(urlParams.get('title') || ''),
+        imageUrl: decodeURIComponent(urlParams.get('imageUrl') || ''),
+        price: parseInt(urlParams.get('price') || '129000'),
+        color: urlParams.get('color') || '',
+        size: urlParams.get('size') || '',
+        productId: urlParams.get('productId') || '',
+        backgroundClass: urlParams.get('backgroundClass') || 'bg-deep-blue',
+        embroideryCount: 1,
+        selectedPositions: ['Izquierda'],
+        uploadedImages: [],
+        basePrice: parseInt(urlParams.get('price') || '129000'),
+        totalPrice: parseInt(urlParams.get('price') || '129000'),
+        quantity: 1
+    };
+
+    basePrice = selectedProduct.basePrice;
+
     const productImage = document.getElementById('productImage') as HTMLImageElement;
     const embroideryCountButtons = document.querySelectorAll('#embroideryCount .option-button');
     const embroideryPositionButtons = document.querySelectorAll('#embroideryPosition .option-button');
@@ -437,18 +480,15 @@ function initializeComponent() {
     const countError = document.getElementById('countError') as HTMLDivElement;
     const positionError = document.getElementById('positionError') as HTMLDivElement;
 
-    const savedImageUrl = sessionStorage.getItem('selectedImageUrl');
-    if (savedImageUrl) {
-        productImage.src = savedImageUrl;
+    if (productImage) {
+        productImage.src = selectedProduct.imageUrl;
     }
-    selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
-    if (selectedProduct) {
-        const titleElement = document.querySelector('h1');
-        if (titleElement) titleElement.textContent = selectedProduct.title || 'CAMISETAS';
-        productImage.src = selectedProduct.imageUrl || '';
-        basePrice = parseInt(selectedProduct.price || '') || basePrice;
+
+    const titleElement = document.querySelector('h3');
+    if (titleElement) titleElement.textContent = `Personaliza tu ${selectedProduct.title}`;
+
         updateTotalPrice();
-    }
+    
 
     function updateTotalPrice() {
         const totalPrice = basePrice + ((embroideryCount - 1) * 30000);
@@ -596,9 +636,7 @@ function initializeComponent() {
                 embroideryCount,
                 selectedPositions,
                 uploadedImages,
-                basePrice,
                 totalPrice: basePrice + (embroideryCount - 1) * 30000,
-                quantity: 1
             };
 
             let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
