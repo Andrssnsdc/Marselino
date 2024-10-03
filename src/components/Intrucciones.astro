@@ -246,71 +246,72 @@
 </style>
 
 <script>
-    // Esperar a que todo el contenido del DOM esté completamente cargado
-    document.addEventListener('DOMContentLoaded', function() {
-        const scrollContainer = document.querySelector('.scroll-container'); // Contenedor para desplazamiento
-        const steps = document.querySelectorAll('.step'); // Seleccionar todos los pasos
-        const prevButton = document.querySelector('.nav-button.prev'); // Botón anterior
-        const nextButton = document.querySelector('.nav-button.next'); // Botón siguiente
-        let currentStep = 0; // Paso actual
+// Interfaz para elementos HTML con la propiedad offsetLeft
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollContainer = document.querySelector('.scroll-container') as HTMLElement; // Contenedor para desplazamiento
+    const steps = document.querySelectorAll('.step') as NodeListOf<HTMLElement>; // Seleccionar todos los pasos
+    const prevButton = document.querySelector('.nav-button.prev') as HTMLButtonElement; // Botón anterior
+    const nextButton = document.querySelector('.nav-button.next') as HTMLButtonElement; // Botón siguiente
+    let currentStep = 0; // Paso actual
 
-        // Actualizar el paso activo basado en el índice
-        function updateActiveStep() {
-            steps.forEach((step, index) => {
-                step.classList.toggle('active', index === currentStep); // Marcar como activo
-            });
+    // Actualizar el paso activo basado en el índice
+    function updateActiveStep(): void {
+        steps.forEach((step, index) => {
+            step.classList.toggle('active', index === currentStep); // Añadir clase 'active' si es el paso actual
+        });
+    }
+
+    // Mover a un paso específico
+    function moveToStep(step: number): void {
+        currentStep = step; // Actualizar el paso actual
+        const targetStep = steps[currentStep]; // Seleccionar el paso objetivo
+        scrollContainer.scrollTo({
+            left: targetStep.offsetLeft, // Desplazarse al paso objetivo
+            behavior: 'smooth' // Animación suave
+        });
+        updateActiveStep(); // Actualizar el paso activo
+    }
+
+    // Manejar el cambio de tamaño de la ventana
+    function handleResize(): void {
+        if (window.innerWidth <= 768) { // Solo para móviles
+            scrollContainer.addEventListener('scroll', handleScroll); // Agregar evento de desplazamiento
+            prevButton.addEventListener('click', handlePrevClick); // Evento para botón anterior
+            nextButton.addEventListener('click', handleNextClick); // Evento para botón siguiente
+            updateActiveStep(); // Inicializar el paso activo
+        } else {
+            // Eliminar eventos si el tamaño de la ventana es mayor a 768px
+            scrollContainer.removeEventListener('scroll', handleScroll);
+            prevButton.removeEventListener('click', handlePrevClick);
+            nextButton.removeEventListener('click', handleNextClick);
+            steps.forEach(step => step.classList.remove('active')); // Eliminar clase 'active'
         }
+    }
 
-        // Mover a un paso específico
-        function moveToStep(step) {
-            currentStep = step; // Actualizar el paso actual
-            const targetStep = steps[currentStep]; // Seleccionar el paso objetivo
-            scrollContainer.scrollTo({
-                left: targetStep.offsetLeft, // Desplazarse al paso objetivo
-                behavior: 'smooth' // Animación suave
-            });
+    // Manejar el desplazamiento del contenedor
+    function handleScroll(): void {
+        const scrollPosition = scrollContainer.scrollLeft; // Posición de desplazamiento
+        const stepWidth = steps[0].offsetWidth; // Ancho de un paso
+        const newStep = Math.round(scrollPosition / stepWidth); // Calcular el nuevo paso basado en la posición de desplazamiento
+        if (newStep !== currentStep) {
+            currentStep = newStep; // Actualizar el paso actual
             updateActiveStep(); // Actualizar el paso activo
         }
+    }
 
-        // Manejar el cambio de tamaño de la ventana
-        function handleResize() {
-            if (window.innerWidth <= 768) { // Solo para móviles
-                scrollContainer.addEventListener('scroll', handleScroll); // Agregar evento de desplazamiento
-                prevButton.addEventListener('click', handlePrevClick); // Agregar evento de clic al botón anterior
-                nextButton.addEventListener('click', handleNextClick); // Agregar evento de clic al botón siguiente
-                updateActiveStep(); // Inicializar el paso activo
-            } else {
-                // Eliminar eventos si el tamaño de la ventana es mayor a 768px
-                scrollContainer.removeEventListener('scroll', handleScroll);
-                prevButton.removeEventListener('click', handlePrevClick);
-                nextButton.removeEventListener('click', handleNextClick);
-                steps.forEach(step => step.classList.remove('active')); // Eliminar estado activo
-            }
-        }
+    // Manejar clic en el botón anterior
+    function handlePrevClick(): void {
+        if (currentStep > 0) moveToStep(currentStep - 1); // Mover al paso anterior si no está en el primero
+    }
 
-        // Manejar el desplazamiento del contenedor
-        function handleScroll() {
-            const scrollPosition = scrollContainer.scrollLeft; // Posición de desplazamiento
-            const stepWidth = steps[0].offsetWidth; // Ancho de un paso
-            const newStep = Math.round(scrollPosition / stepWidth); // Calcular el nuevo paso basado en la posición de desplazamiento
-            if (newStep !== currentStep) {
-                currentStep = newStep; // Actualizar el paso actual
-                updateActiveStep(); // Actualizar el paso activo
-            }
-        }
+    // Manejar clic en el botón siguiente
+    function handleNextClick(): void {
+        if (currentStep < steps.length - 1) moveToStep(currentStep + 1); // Mover al siguiente paso si no está en el último
+    }
 
-        // Manejar clic en el botón anterior
-        function handlePrevClick() {
-            if (currentStep > 0) moveToStep(currentStep - 1); // Mover al paso anterior
-        }
+    // Agregar evento para el cambio de tamaño de ventana
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Inicializar en la carga
+});
 
-        // Manejar clic en el botón siguiente
-        function handleNextClick() {
-            if (currentStep < steps.length - 1) moveToStep(currentStep + 1); // Mover al siguiente paso
-        }
-
-        // Agregar evento para el cambio de tamaño de ventana
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Inicializar en carga
-    });
 </script>

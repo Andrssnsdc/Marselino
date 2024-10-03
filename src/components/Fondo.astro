@@ -122,25 +122,31 @@
 		const size = 10 + Math.random() * 150;
 		bubble.style.width = `${size}px`;
 		bubble.style.height = `${size}px`;
+// Función para crear una burbuja
+function createBubble(): void {
+    // Crea un nuevo elemento div para la burbuja
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble'); // Añade la clase 'bubble' para aplicar estilos
 
-		// Duración de animación aleatoria 
-		bubble.style.animationDuration = `${90 + Math.random() * 3}s`;
+    // Duración de animación aleatoria entre 90 y 93 segundos
+    bubble.style.animationDuration = `${90 + Math.random() * 3}s`;
 
-		// Opacidad aleatoria 
-		bubble.style.opacity = `${0.1 + Math.random() * 0.2}`;
+    // Opacidad aleatoria entre 0.1 y 0.3
+    bubble.style.opacity = `${0.1 + Math.random() * 0.2}`;
 
-		// Retraso de inicio de animación aleatorio
-		bubble.style.animationDelay = `${Math.random() * 10}s`;
+    // Retraso de inicio de animación aleatorio entre 0 y 10 segundos
+    bubble.style.animationDelay = `${Math.random() * 10}s`;
 
-		// Añadir la burbuja al contenedor
-		document.querySelector('.bubbles').appendChild(bubble);
+    // Añadir la burbuja al contenedor
+    const bubblesContainer = document.querySelector('.bubbles') as HTMLElement; // Asegúrate de que el contenedor exista
+    if (bubblesContainer) {
+        bubblesContainer.appendChild(bubble); // Agrega la burbuja al contenedor
+    }
+}
 
-	}
-
-	
-
-	// Crear un conjunto inicial de burbujas
-	for (let i = 0; i < 12; i++) {
-		createBubble();
+// Crear un conjunto inicial de burbujas
+for (let i = 0; i < 12; i++) {
+    createBubble(); // Llama a la función para crear 12 burbujas
+}
 	}
 </script>

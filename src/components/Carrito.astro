@@ -329,165 +329,191 @@
 </style>
 
 <script>
-  let cart = [];
-  let itemToDelete = null;
+ interface CartItem {
+    title: string; // Título del producto
+    size: string; // Talla del producto
+    color: string; // Color del producto
+    embroideryCount: number; // Número de bordados
+    selectedPositions: string[]; // Posiciones seleccionadas para el bordado
+    imageUrl: string; // URL de la imagen del producto
+    quantity: number; // Cantidad de productos en el carrito
+    totalPrice: number; // Precio total del producto
+}
 
-  function initializeCart() {
-    const cartButton = document.getElementById('openCart');
-    const cartPanel = document.getElementById('cartPanel');
-    const closeCart = document.getElementById('closeCart');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartCount = document.getElementById('cartCount');
-    const overlay = document.getElementById('overlay');
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    const deleteAlert = document.getElementById('deleteAlert');
-    const confirmDelete = document.getElementById('confirmDelete');
-    const cancelDelete = document.getElementById('cancelDelete');
+// Arreglo para almacenar los artículos del carrito
+let cart: CartItem[] = [];
+let itemToDelete: number | null = null; // Almacena el índice del artículo a eliminar
 
-    function loadCart() {
-      const savedCart = sessionStorage.getItem('cart');
-      if (savedCart) {
-        cart = JSON.parse(savedCart);
-        updateCartDisplay();
-      }
-    }
+function initializeCart(): void {
+    // Selecciona elementos del DOM
+    const cartButton = document.getElementById('openCart') as HTMLElement;
+    const cartPanel = document.getElementById('cartPanel') as HTMLElement;
+    const closeCart = document.getElementById('closeCart') as HTMLElement;
+    const cartItems = document.getElementById('cartItems') as HTMLElement;
+    const cartTotal = document.getElementById('cartTotal') as HTMLElement;
+    const cartCount = document.getElementById('cartCount') as HTMLElement;
+    const overlay = document.getElementById('overlay') as HTMLElement;
+    const checkoutBtn = document.getElementById('checkoutBtn') as HTMLElement;
+    const deleteAlert = document.getElementById('deleteAlert') as HTMLElement;
+    const confirmDelete = document.getElementById('confirmDelete') as HTMLElement;
+    const cancelDelete = document.getElementById('cancelDelete') as HTMLElement;
 
-    function updateCartDisplay() {
-      cartItems.innerHTML = '';
-      let total = 0;
-      let count = 0;
-
-      if (cart.length === 0) {
-        cartItems.innerHTML = `
-          <div class="empty-cart">
-            <p>Tu carrito está vacío</p>
-            <button class="add-products-btn" onclick="window.location.href='/'">Agregar productos</button>
-          </div>
-        `;
-      } else {
-        cart.forEach((item, index) => {
-          const itemTotal = item.totalPrice * item.quantity;
-          total += itemTotal;
-          count += item.quantity;
-
-          const itemElement = document.createElement('div');
-          itemElement.classList.add('cart-item');
-          itemElement.innerHTML = `
-            <img src="${item.imageUrl}" alt="${item.title}" class="item-image">
-            <div class="item-details">
-              <div class="item-name">${item.title}</div>
-              <div class="item-info">Talla: ${item.size}</div>
-              <div class="item-info">Color: ${item.color}</div>
-              <div class="item-info">Bordados: ${item.embroideryCount}</div>
-              <div class="item-info">Posiciones: ${item.selectedPositions.join(', ')}</div>
-              <div class="item-price">$${itemTotal.toLocaleString()}</div>
-              <div class="item-controls">
-                <div class="quantity-control">
-                  <button class="quantity-btn minus" data-index="${index}">-</button>
-                  <span class="quantity">${item.quantity}</span>
-                  <button class="quantity-btn plus" data-index="${index}">+</button>
-                </div>
-                <button class="delete-btn" data-index="${index}">Eliminar</button>
-              </div>
-            </div>
-          `;
-          cartItems.appendChild(itemElement);
-        });
-      }
-
-      cartTotal.textContent = `Total: $${total.toLocaleString()}`;
-      cartCount.textContent = count.toString();
-      sessionStorage.setItem('cartTotal', total);
-    }
-
-    function openCart() {
-      cartPanel.classList.add('open');
-      overlay.style.display = 'block';
-    }
-
-    function closeCartPanel() {
-      cartPanel.classList.remove('open');
-      overlay.style.display = 'none';
-    }
-
-    function showDeleteAlert(index) {
-      itemToDelete = index;
-      deleteAlert.style.display = 'block';
-      overlay.style.display = 'block';
-    }
-
-    function hideDeleteAlert() {
-      deleteAlert.style.display = 'none';
-      overlay.style.display = 'none';
-      itemToDelete = null;
-    }
-
-    cartButton.addEventListener('click', openCart);
-    closeCart.addEventListener('click', closeCartPanel);
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) {
-        closeCartPanel();
-        hideDeleteAlert();
-      }
-    });
-
-    cartItems.addEventListener('click', (e) => {
-      if (e.target.classList.contains('quantity-btn')) {
-        const index = parseInt(e.target.getAttribute('data-index'));
-        if (e.target.classList.contains('plus')) {
-          cart[index].quantity++;
-        } else if (e.target.classList.contains('minus')) {
-          if (cart[index].quantity > 1) {
-            cart[index].quantity--;
-          } else {
-            showDeleteAlert(index);
-            return;
-          }
+    // Cargar el carrito guardado en el sessionStorage
+    function loadCart(): void {
+        const savedCart = sessionStorage.getItem('cart');
+        if (savedCart) {
+            cart = JSON.parse(savedCart);
+            updateCartDisplay(); // Actualiza la visualización del carrito
         }
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        updateCartDisplay();
-      } else if (e.target.classList.contains('delete-btn')) {
-        const index = parseInt(e.target.getAttribute('data-index'));
-        showDeleteAlert(index);
-      }
+    }
+
+    // Actualizar la visualización del carrito
+    function updateCartDisplay(): void {
+        cartItems.innerHTML = ''; // Limpia los elementos actuales del carrito
+        let total = 0;
+        let count = 0;
+
+        // Si el carrito está vacío, muestra un mensaje
+        if (cart.length === 0) {
+            cartItems.innerHTML = `
+                <div class="empty-cart">
+                    <p>Tu carrito está vacío</p>
+                    <button class="add-products-btn" onclick="window.location.href='/'">Agregar productos</button>
+                </div>
+            `;
+        } else {
+            // Recorre cada artículo en el carrito y actualiza la visualización
+            cart.forEach((item, index) => {
+                const itemTotal = item.totalPrice * item.quantity; // Calcula el total por artículo
+                total += itemTotal; // Acumula el total general
+                count += item.quantity; // Acumula la cantidad total
+
+                // Crear el elemento visual del artículo en el carrito
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                itemElement.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.title}" class="item-image">
+                    <div class="item-details">
+                        <div class="item-name">${item.title}</div>
+                        <div class="item-info">Talla: ${item.size}</div>
+                        <div class="item-info">Color: ${item.color}</div>
+                        <div class="item-info">Bordados: ${item.embroideryCount}</div>
+                        <div class="item-info">Posiciones: ${item.selectedPositions.join(', ')}</div>
+                        <div class="item-price">$${itemTotal.toLocaleString()}</div>
+                        <div class="item-controls">
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-index="${index}">-</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="quantity-btn plus" data-index="${index}">+</button>
+                            </div>
+                            <button class="delete-btn" data-index="${index}">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+                cartItems.appendChild(itemElement); // Añadir el nuevo elemento al carrito
+            });
+        }
+
+        // Actualiza el total y la cuenta de artículos en el carrito
+        cartTotal.textContent = `Total: $${total.toLocaleString()}`;
+        cartCount.textContent = count.toString();
+        sessionStorage.setItem('cartTotal', total.toString()); // Guardar el total en el sessionStorage
+    }
+
+    // Funciones para abrir y cerrar el carrito
+    function openCart(): void {
+        cartPanel.classList.add('open');
+        overlay.style.display = 'block'; // Muestra la superposición
+    }
+
+    function closeCartPanel(): void {
+        cartPanel.classList.remove('open');
+        overlay.style.display = 'none'; // Oculta la superposición
+    }
+
+    // Mostrar alerta de eliminación de un artículo
+    function showDeleteAlert(index: number): void {
+        itemToDelete = index; // Guarda el índice del artículo a eliminar
+        deleteAlert.style.display = 'block'; // Muestra la alerta
+        overlay.style.display = 'block'; // Muestra la superposición
+    }
+
+    // Ocultar alerta de eliminación
+    function hideDeleteAlert(): void {
+        deleteAlert.style.display = 'none'; // Oculta la alerta
+        overlay.style.display = 'none'; // Oculta la superposición
+        itemToDelete = null; // Reinicia el índice
+    }
+
+    // Configurar eventos de clic
+    cartButton.addEventListener('click', openCart); // Abre el carrito
+    closeCart.addEventListener('click', closeCartPanel); // Cierra el carrito
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeCartPanel(); // Cierra el carrito si se hace clic en la superposición
+            hideDeleteAlert(); // Oculta la alerta de eliminación
+        }
     });
 
+    // Manejar clics en los elementos del carrito
+    cartItems.addEventListener('click', (e) => {
+        if (e.target instanceof HTMLElement && e.target.classList.contains('quantity-btn')) {
+            const index = parseInt(e.target.getAttribute('data-index') || '0');
+            if (e.target.classList.contains('plus')) {
+                cart[index].quantity++; // Aumenta la cantidad
+            } else if (e.target.classList.contains('minus')) {
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity--; // Disminuye la cantidad
+                } else {
+                    showDeleteAlert(index); // Muestra alerta si la cantidad es 1
+                    return;
+                }
+            }
+            sessionStorage.setItem('cart', JSON.stringify(cart)); // Guarda el carrito en el sessionStorage
+            updateCartDisplay(); // Actualiza la visualización del carrito
+        } else if (e.target instanceof HTMLElement && e.target.classList.contains('delete-btn')) {
+            const index = parseInt(e.target.getAttribute('data-index') || '0');
+            showDeleteAlert(index); // Muestra alerta de eliminación
+        }
+    });
+
+    // Confirmar eliminación de un artículo
     confirmDelete.addEventListener('click', () => {
-      if (itemToDelete !== null) {
-        cart.splice(itemToDelete, 1);
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        updateCartDisplay();
-      }
-      hideDeleteAlert();
+        if (itemToDelete !== null) {
+            cart.splice(itemToDelete, 1); // Elimina el artículo del carrito
+            sessionStorage.setItem('cart', JSON.stringify(cart)); // Guarda el carrito actualizado
+            updateCartDisplay(); // Actualiza la visualización del carrito
+        }
+        hideDeleteAlert(); // Oculta la alerta de eliminación
     });
 
-    cancelDelete.addEventListener('click', hideDeleteAlert);
+    cancelDelete.addEventListener('click', hideDeleteAlert); // Cierra la alerta si se cancela
 
+    // Manejar clic en el botón de checkout
     checkoutBtn.addEventListener('click', () => {
-      const comments = document.getElementById('customerComments').value;
-      sessionStorage.setItem('customerComments', comments);
-      console.log('Procediendo al pago');
-      window.location.href = '/checkout';
+        const comments = (document.getElementById('customerComments') as HTMLInputElement).value; // Obtener comentarios
+        sessionStorage.setItem('customerComments', comments); // Guarda comentarios en el sessionStorage
+        console.log('Procediendo al pago');
+        window.location.href = '/checkout'; // Redirige al usuario a la página de pago
     });
 
-    loadCart();
+    loadCart(); // Cargar el carrito al inicializar
 
     // Escuchar cambios en el sessionStorage
     window.addEventListener('storage', (event) => {
-      if (event.key === 'cart') {
-        cart = JSON.parse(event.newValue || '[]');
-        updateCartDisplay();
-      }
+        if (event.key === 'cart') {
+            cart = JSON.parse(event.newValue || '[]'); // Actualiza el carrito si hay cambios en el sessionStorage
+            updateCartDisplay(); // Actualiza la visualización del carrito
+        }
     });
 
     // Evento personalizado para actualizar el carrito
     document.addEventListener('cartUpdated', () => {
-      loadCart();
+        loadCart(); // Cargar el carrito al recibir la actualización
     });
-  }
+}
 
-  // Inicializar el carrito en la carga de la página y después de las transiciones de vista
-  document.addEventListener('astro:page-load', initializeCart);
-  document.addEventListener('astro:after-swap', initializeCart);
+// Inicializa el carrito al cargar la página y después de transiciones de vista
+document.addEventListener('astro:page-load', initializeCart);
+document.addEventListener('astro:after-swap', initializeCart);
 </script>

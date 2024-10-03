@@ -354,56 +354,70 @@ import Carrito from "./Carrito.astro";
 
 
 <script>
-const navbar = document.querySelector('.navbar');
-const navbarToggle = document.querySelector('.navbar-toggle');
-const navbarMenu = document.querySelector('.navbar-menu');
-let lastScrollTop = 0;
-let isMenuOpen = false;
+// Selecciona elementos del DOM
+const navbar = document.querySelector('.navbar') as HTMLElement; // Navbar principal
+const navbarToggle = document.querySelector('.navbar-toggle') as HTMLElement; // Botón para abrir/cerrar menú
+const navbarMenu = document.querySelector('.navbar-menu') as HTMLElement; // Menú de navegación
+
+// Variables para gestionar el estado de la navegación
+let lastScrollTop = 0; // Para rastrear la posición de desplazamiento
+let isMenuOpen = false; // Estado del menú (abierto o cerrado)
+
+// Evento que se dispara cuando la página se carga
 document.addEventListener('astro:page-load', () => {
-navbarToggle.addEventListener('click', () => {
-    if (isMenuOpen) {
-        closeMenu();
-    } else {
-        openMenu();
-    }
+    // Agregar evento de clic al botón de alternar navbar
+    navbarToggle.addEventListener('click', () => {
+        if (isMenuOpen) {
+            closeMenu(); // Cerrar menú si está abierto
+        } else {
+            openMenu(); // Abrir menú si está cerrado
+        }
+    });
 });
- });
-function openMenu() {
-    navbarMenu.classList.remove('hide');
-    navbarMenu.classList.add('active');
+
+// Función para abrir el menú de navegación
+function openMenu(): void {
+    navbarMenu.classList.remove('hide'); // Eliminar la clase 'hide'
+    navbarMenu.classList.add('active'); // Añadir la clase 'active'
     setTimeout(() => {
-        navbarMenu.classList.add('show');
+        navbarMenu.classList.add('show'); // Añadir la clase 'show' después de un retraso
     }, 100);
-    navbarToggle.classList.add('is-active'); // Añade la clase para la animación del ícono
-    isMenuOpen = true;
+    navbarToggle.classList.add('is-active'); // Añadir clase para animación del botón
+    isMenuOpen = true; // Actualizar el estado del menú
 }
 
-function closeMenu() {
-    navbarMenu.classList.remove('show');
-    navbarMenu.classList.add('hide');
+// Función para cerrar el menú de navegación
+function closeMenu(): void {
+    navbarMenu.classList.remove('show'); // Eliminar clase 'show'
+    navbarMenu.classList.add('hide'); // Añadir clase 'hide'
     setTimeout(() => {
-        navbarMenu.classList.remove('active', 'hide');
+        navbarMenu.classList.remove('active', 'hide'); // Eliminar clases 'active' y 'hide' después de un retraso
     }, 500);
-    navbarToggle.classList.remove('is-active'); // Elimina la clase para revertir la animación del ícono
-    isMenuOpen = false;
+    navbarToggle.classList.remove('is-active'); // Eliminar clase para revertir la animación del botón
+    isMenuOpen = false; // Actualizar el estado del menú
 }
 
+// Evento que se dispara en el desplazamiento de la ventana
 window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
+    const scrollTop = window.scrollY; // Obtener la posición de desplazamiento vertical
 
+    // Si el usuario se desplaza hacia abajo y ha desplazado más de 100px, ocultar la navbar
     if (scrollTop > lastScrollTop && scrollTop > 100) {
-        navbar.classList.add('navbar-hidden');
+        navbar.classList.add('navbar-hidden'); // Añadir clase que oculta la navbar
     } else {
-        navbar.classList.remove('navbar-hidden');
+        navbar.classList.remove('navbar-hidden'); // Eliminar la clase que oculta la navbar
     }
-    lastScrollTop = scrollTop;
+    lastScrollTop = scrollTop; // Actualizar la posición de desplazamiento anterior
 });
 
-document.addEventListener('click', (event) => {
-    const target = event.target;
+// Evento que se dispara en clics en el documento
+document.addEventListener('click', (event: MouseEvent) => {
+    const target = event.target as HTMLElement; // Obtener el elemento que fue clicado
 
+    // Si el clic fue fuera del menú y el botón de alternar y el menú está abierto, cerrar el menú
     if (!navbarMenu.contains(target) && !navbarToggle.contains(target) && isMenuOpen) {
-        closeMenu();
+        closeMenu(); // Cerrar menú si se hace clic fuera de él
     }
 });
+
 </script>
