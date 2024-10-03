@@ -37,8 +37,9 @@ const productId = `product-${Math.random().toString(36).substr(2, 9)}`;
 <article class={`product-card ${backgroundClass}`} id={productId} transition:name={`product-card-${productId}`}>
   <div class="product-content">
     <header class="product-header">
-      <h3 class="product-title" transition:name={`title-${productId}`}>{title}</h2>
+      <h3 class="product-title" transition:name="title-product">{title}</h2>
       <h4 class="product-subtitle" >{subtitle}</h3>
+        
     </header>
     <p class="product-description" >{description}</p>
     <div class="product-details">
@@ -71,7 +72,7 @@ const productId = `product-${Math.random().toString(36).substr(2, 9)}`;
             alt={title} 
             width={300} 
             height={300} 
-            transition:name={`image-${productId}`}
+            transition:name="imagen-producto"
           />
         </div>
       </div>

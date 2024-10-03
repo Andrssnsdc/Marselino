@@ -1,35 +1,36 @@
 ---
-// personalization.astro
-import { Image } from 'astro:assets';
+
 // Obtener los datos del producto desde los parámetros de la URL
-const urlParams = Astro.url.searchParams;
+const { url } = Astro;
+const urlParams = new URL(url).searchParams;
+
+
 const productId = urlParams.get('productId') || 'default-product-id';
 const title = urlParams.get('title') || 'Producto';
 const imageUrl = urlParams.get('imageUrl') || '';
 const price = urlParams.get('price') || '129000';
 const color = urlParams.get('color') || 'default-color';
 const size = urlParams.get('size') || 'M';
-const backgroundClass = urlParams.get('backgroundClass') || '--medium-blue';
+const backgroundClass = urlParams.get('backgroundClass') || '--medium-blue-default';
 
-
-// Decodificar los valores que pueden contener caracteres especiales
-const decodedTitle = decodeURIComponent(title);
-const decodedImageUrl = decodeURIComponent(imageUrl);
 const initialPrice = parseInt(price);
-const decodedBackgroundClass = decodeURIComponent(backgroundClass);
+
 
 ---
 
 <section class="fullscreen-section">
-    <div class="container">
-        <h3 transition:name={`title-${productId}`}>Personaliza tu {decodedTitle}</h3>
+    <div class="container-card">
+        <h3 transition:name={`title-${productId}`}>Personaliza tu {title}</h3>
         <div class="product-container">
+            
+            <div class="product-image-flex">
             <div class="product-image-container">
-                <img src={decodedImageUrl} alt={decodedTitle} id="productImage" transition:name={`image-${productId}`}>
+                <img src={imageUrl} alt={title} id="productImage" transition:name="imagen-producto">
                 <div class="svg-container" id="svgContainer"></div>
-                <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
             </div>
-            <div class={`product-options ${decodedBackgroundClass}`} transition:name={`product-card-${productId}`}>
+            <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
+            </div>
+            <div class={`product-options ${backgroundClass}`} transition:name={`product-card-${productId}`}>
                 <div class="option-group">
                     <div class="option-title">¿Cuántos bordados quieres?</div>
                     <div class="option-buttons" id="embroideryCount">
@@ -66,30 +67,33 @@ const decodedBackgroundClass = decodeURIComponent(backgroundClass);
 </section>
 
 
-<style is:global define:vars={{ backgroundClass }} >
+<style is:global  >
 
  
     h1{
         color: var(--white-smoke);
     }
+
+    h3{
+        margin: 40px;
+    }
     .fullscreen-section {
-        background: linear-gradient(to bottom, rgba(38, 61, 191, 0.608) 96%, rgba(236, 236, 236, 0) 100%);
+        
         width: 100%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        position: absolute;
+        
         top: 50px;
         border: none;
         
     }
 
-    .container {
-        max-width: 1200px;
+    .container-card {
+        max-width: 100vw;
         width: 100%;
         margin: 0 auto;
-        padding: 20px;
         position: absolute;
     }
 
@@ -98,42 +102,52 @@ const decodedBackgroundClass = decodeURIComponent(backgroundClass);
         flex-direction: column;
         background-color: #f2f2f21b;
         border-radius: 10px;
-        overflow: hidden;
+       
     }
-
+    
+    .product-image-flex{
+     text-align: center;   
+     flex:1
+    }
     .product-image-container {
         
-        padding: 20px;
-        text-align: center;
         position: relative;
     }
 
     .product-image-container img {
         max-width: 100%;
-        height: auto;
+        height: 500px;
         display: block;
         margin: 0 auto;
+        transition: ease-in-out;
     }
 
+    .svg-container {
+        position: static;
+        left: 40px;
+        pointer-events: none;
+    }
     .product-options {
-        background-color: var(--backgroundClass);
+        background-color:  var(--medium-blue);
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         align-items: center;
-        padding:36px 12px;
-        gap: 28px;
+        padding: 40px 0px ;
+        gap: 30px;
+        width: 100%;
     }
 
     .option-group {
         align-items: center;
         flex-direction: column;
         display: flex;
+        gap:12px
         
     }
 
     .option-title {
-        margin-bottom: 10px;
+        
         font-weight: bold;
         color: var(--white-smoke);
         font-size: 18px;
@@ -282,14 +296,7 @@ const decodedBackgroundClass = decodeURIComponent(backgroundClass);
         align-items: center;
     }
 
-    .svg-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
+    
 
     .alert-overlay {
         position: fixed;
@@ -393,19 +400,17 @@ const decodedBackgroundClass = decodeURIComponent(backgroundClass);
         z-index: 1000;
         pointer-events: none;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 1080px) {
         .product-container {
             flex-direction: row;
         }
-        .product-image-container,
-        .product-options {
-            flex: 1;
-            
-        }
-        .product-options {
-            padding: 40px 86px;
-
-        }
+        
+        .product-options{
+            padding: 40px 80px ;
+            width: 50%;
+    }
+    
+        
         .alert-box{
             padding: 10px;
            
@@ -420,8 +425,11 @@ const decodedBackgroundClass = decodeURIComponent(backgroundClass);
     .option-button{
         font-size: 18px;
     }
-        
+
+    .container-card{
+        max-width: 75vw;
     }
+}
 </style>
 
 <script>
@@ -456,7 +464,7 @@ function initializeComponent() {
         color: urlParams.get('color') || '',
         size: urlParams.get('size') || '',
         productId: urlParams.get('productId') || '',
-        backgroundClass: urlParams.get('backgroundClass') || 'bg-deep-blue',
+        backgroundClass: urlParams.get('backgroundClass') || '',
         embroideryCount: 1,
         selectedPositions: ['Izquierda'],
         uploadedImages: [],
@@ -541,9 +549,9 @@ function initializeComponent() {
     function updateSVGPositions() {
         svgContainer.innerHTML = '';
         const positionMap: {[key: string]: {x: string, count: number}} = {
-            'Izquierda': { x: '20%', count: 0 },
-            'Centro': { x: '50%', count: 0 },
-            'Derecha': { x: '80%', count: 0 }
+            'Izquierda': { x: '32%', count: 0 },
+            'Centro': { x: '45%', count: 0 },
+            'Derecha': { x: '58%', count: 0 }
         };
 
         for (let i = 0; i < embroideryCount; i++) {
@@ -555,15 +563,15 @@ function initializeComponent() {
             const { x, count } = positionMap[position];
             for (let i = 0; i < count; i++) {
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.setAttribute("width", "20");
-                svg.setAttribute("height", "20");
+                svg.setAttribute("width", "30");
+                svg.setAttribute("height", "30");
                 svg.setAttribute("viewBox", "0 0 20 20");
                 svg.setAttribute("fill", "none");
-                svg.innerHTML = '<circle cx="10" cy="10" r="10" fill="#BF472C" fill-opacity="0.58"/>';
+                svg.innerHTML = '<circle cx="10" cy="10" r="10" fill="#BF472C" fill-opacity="0.75"/>';
 
                 svg.style.position = 'absolute';
                 svg.style.left = x;
-                svg.style.top = `${20 + i * 25}%`;
+                svg.style.top = `${30 + i * 13}%`;
                 svgContainer.appendChild(svg);
             }
         }
