@@ -122,14 +122,18 @@
   }
 
   .cart-item {
+    display: flex;
+    flex-direction: row;
     border: 1px solid var(--medium-blue);
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 15px;
+    gap: 10px;
   }
 
   .item-details {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     margin-bottom: 10px;
   }
@@ -140,9 +144,12 @@
     color: var(--deep-blue);
   }
 
+  
+
   .item-price {
     color: var(--rust-red);
     font-weight: 600;
+    text-align: end;
   }
 
   .item-controls {
@@ -155,6 +162,7 @@
   .quantity-control {
     display: flex;
     align-items: center;
+    gap: 10px;
   }
 
   .quantity-btn {
@@ -185,14 +193,20 @@
     background-color: var(--rust-red);
     color: var(--white-smoke);
     border: none;
-    padding: 8px 12px;
+    
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    align-self: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 40px;
+    align-self: start;
   }
 
   .delete-btn:hover {
-    background-color: #a33d24;
+    background-color: #913620;
   }
 
   .cart-total {
@@ -281,6 +295,7 @@
   .cancel-btn {
     background-color: var(--rust-red);
     color: var(--white-smoke);
+    
   }
 
   .cancel-btn:hover {
@@ -314,8 +329,9 @@
   }
 
   .item-image {
+    
     width: 100%;
-    max-width: 100px;
+    max-width: 150px;
     height: auto;
     object-fit: cover;
     margin-right: 15px;
@@ -405,10 +421,11 @@ function initializeCart(): void {
                                 <button class="quantity-btn minus" data-index="${index}">-</button>
                                 <span class="quantity">${item.quantity}</span>
                                 <button class="quantity-btn plus" data-index="${index}">+</button>
-                            </div>
-                            <button class="delete-btn" data-index="${index}">Eliminar</button>
+                            </div> 
                         </div>
+                        
                     </div>
+                    <button class="delete-btn" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24.975609756097562" viewBox="0 0 1025 1024"><path fill="#f2f2f2" d="M960.865 192h-896q-26 0-45-18.5t-19-45t18.5-45.5t45.5-19h320q0-26 18.5-45t45.5-19h128q27 0 45.5 19t18.5 45h320q26 0 45 19t19 45.5t-19 45t-45 18.5m0 704q0 53-37.5 90.5t-90.5 37.5h-640q-53 0-90.5-37.5t-37.5-90.5V256h896zm-640-448q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5zm256 0q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5zm256 0q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5z"/></svg></button>
                 `;
                 cartItems.appendChild(itemElement); // Añadir el nuevo elemento al carrito
             });
