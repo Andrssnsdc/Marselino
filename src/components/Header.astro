@@ -82,8 +82,10 @@ import Carrito from "./Carrito.astro";
                 </ul>
                 
             </div>
-                <a class="icon-shop" href="">
 
+
+                </a>
+                
                 </a>
         
     </nav>
@@ -118,7 +120,7 @@ import Carrito from "./Carrito.astro";
         
         height: 100%;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-around;
         align-items: center;
     }
 
@@ -131,8 +133,8 @@ import Carrito from "./Carrito.astro";
     }
 
     .navbar-logo img {
-        height: 2.5rem;
-        margin-right: 0.75rem;
+        width: 200px;
+        
         filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
     }
 
@@ -163,7 +165,7 @@ import Carrito from "./Carrito.astro";
         text-decoration: none;
         color: var(--dark-gray);
         font-weight: 500;
-        font-size: 1.5rem;
+        font-size: 20px;
         position: relative;
         transition: color 0.3s ease;
     }
@@ -265,9 +267,7 @@ import Carrito from "./Carrito.astro";
 
     /* Estilos para pantallas móviles */
     @media (max-width: 767px) {
-    .svg-mobile {
-        display: inline-block;
-    }
+    
 
     /* Mostrar elementos solo para móviles */
     .icon-shop-no-desktop,
@@ -280,7 +280,7 @@ import Carrito from "./Carrito.astro";
     .navbar-container {
        display: flex;
        flex-direction: row;
-       justify-content: space-evenly;
+       
     }
 
 
@@ -343,10 +343,12 @@ import Carrito from "./Carrito.astro";
         .logo-name{
             margin-top: 40%;
         }
-    .navbar-logo img {
-        height: 2.5rem;
-        margin-left: 2.5rem;
+        .navbar-logo img {
+        width: 150px;
         
+        
+    }
+    
     }
 
     }

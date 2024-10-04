@@ -1,9 +1,7 @@
 ---
-
 // Obtener los datos del producto desde los parámetros de la URL
 const { url } = Astro;
 const urlParams = new URL(url).searchParams;
-
 
 const productId = urlParams.get('productId') || 'default-product-id';
 const title = urlParams.get('title') || 'Producto';
@@ -11,10 +9,12 @@ const imageUrl = urlParams.get('imageUrl') || '';
 const price = urlParams.get('price') || '129000';
 const color = urlParams.get('color') || 'default-color';
 const size = urlParams.get('size') || 'M';
-const backgroundClass = urlParams.get('backgroundClass') || '--medium-blue-default';
 
 const initialPrice = parseInt(price);
 
+// Determinar la clase de fondo basada en el título
+const backgroundClass = title.toUpperCase() === "CAMISETA" ? "medium-blue" : 
+                        title.toUpperCase() === "BUZO" ? "rust-red" : "no funciona";
 
 ---
 
@@ -22,15 +22,15 @@ const initialPrice = parseInt(price);
     <div class="container-card">
         <h3 transition:name={`title-${productId}`}>Personaliza tu {title}</h3>
         <div class="product-container">
-            
             <div class="product-image-flex">
-            <div class="product-image-container">
-                <img src={imageUrl} alt={title} id="productImage" transition:name="imagen-producto">
-                <div class="svg-container" id="svgContainer"></div>
+                <div class="product-image-container">
+                    <img src={imageUrl} alt={title} id="productImage" transition:name={`imagen-${productId}`}>
+                    <div class="svg-container" id="svgContainer"></div>
+                </div>
+                <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
             </div>
-            <p style="color: var(--white-smoke); font-size: 24px;">100% algodón</p>
-            </div>
-            <div class={`product-options ${backgroundClass}`} transition:name={`product-card-${productId}`}>
+            <div class:list={["product-options", backgroundClass]} transition:name={`product-card-${productId}`}>
+                <!-- Contenido de product-options -->
                 <div class="option-group">
                     <div class="option-title">¿Cuántos bordados quieres?</div>
                     <div class="option-buttons" id="embroideryCount">
@@ -65,29 +65,23 @@ const initialPrice = parseInt(price);
         </div>
     </div>
 </section>
-
-
-<style is:global  >
-
- 
-    h1{
+<style is:global>
+    h1 {
         color: var(--white-smoke);
     }
 
-    h3{
+    h3 {
         margin: 40px;
     }
+
     .fullscreen-section {
-        
         width: 100%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        
         top: 50px;
         border: none;
-        
     }
 
     .container-card {
@@ -102,15 +96,14 @@ const initialPrice = parseInt(price);
         flex-direction: column;
         background-color: #f2f2f21b;
         border-radius: 10px;
-       
     }
     
-    .product-image-flex{
-     text-align: center;   
-     flex:1
+    .product-image-flex {
+        text-align: center;   
+        flex: 1;
     }
+
     .product-image-container {
-        
         position: relative;
     }
 
@@ -127,17 +120,25 @@ const initialPrice = parseInt(price);
         left: 40px;
         pointer-events: none;
     }
+
     .product-options {
-        background-color:  var(--medium-blue);
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         align-items: center;
-        padding: 40px 0px ;
+        padding: 40px 0px;
         gap: 30px;
         width: 100%;
+        background-color: var(--medium-blue);
     }
 
+    .product-options.medium-blue {
+        background-color: var(--medium-blue);
+    }
+
+    .product-options.rust-red {
+        background-color: var(--rust-red);
+    }
     .option-group {
         align-items: center;
         flex-direction: column;
@@ -446,7 +447,7 @@ const initialPrice = parseInt(price);
     totalPrice: number;
     quantity: number;
     productId: string;
-    backgroundClass: string;
+    
 }
 
 let basePrice: number;
@@ -464,7 +465,7 @@ function initializeComponent() {
         color: urlParams.get('color') || '',
         size: urlParams.get('size') || '',
         productId: urlParams.get('productId') || '',
-        backgroundClass: urlParams.get('backgroundClass') || '',
+        
         embroideryCount: 1,
         selectedPositions: ['Izquierda'],
         uploadedImages: [],
@@ -506,6 +507,7 @@ function initializeComponent() {
         }
     }
 
+    
     function updateEmbroideryCount(count: number) {
         embroideryCount = count;
         selectedPositions = selectedPositions.slice(0, count);

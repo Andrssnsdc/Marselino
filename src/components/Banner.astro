@@ -4,16 +4,17 @@ import BotonAction from "./BotonAction.astro";
 
 <section><div class="banner">
     <div class="banner-left" aria-label="Galería de imágenes de ropa">
-        <img src="https://images.unsplash.com/photo-1627910016961-ee310ef0b108?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Camiseta naranja colgada en la rama de un árbol" class="banner-image">
+        <img src="https://images.unsplash.com/photo-1631037513088-0694f5f7bc2f?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Camiseta naranja colgada en la rama de un árbol" class="banner-image">
         <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Mujer con camiseta negra de cuello redondo" class="banner-image">
-        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80" alt="Camiseta blanca con cuello redondo" class="banner-image">
+        <img src="https://images.unsplash.com/photo-1631037513265-ddd7d9a09d56?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Camiseta blanca con cuello redondo" class="banner-image">
+        <img src="https://images.unsplash.com/photo-1631037513117-0494ee1e9226?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="bordado" class="banner-image">
     </div>
     <div class="banner-right">
         <img class="background-static" src="/images/fondo-hero.webp" alt="fondo estático">
         <div class="banner-content">
             <div class="banner-text">
             <h1>Crea tu ropa con bordados personalizados en minutos</h1>
-            <h2>Ellos marcan nuestra vida. Ahora, TÚ conviértelo en la marca de tu prenda favorita</h2>
+            <h2>Ellos marcan nuestra vida. Ahora, tú conviértelos en la marca de tu prenda favorita</h2>
             <h3>Lleva a tu amigo contigo a todas partes.</h3>
             </div>
         <BotonAction/
@@ -36,12 +37,21 @@ import BotonAction from "./BotonAction.astro";
         --cut: 0.1em;
         --bg: radial-gradient(ellipse 80% 50% at 50% 120%, rgba(38, 61, 191), rgba(56, 84, 166, 0.95));
     }
+    h2 {
+        font-weight: 500;
+        
+    }
+    h3{
+        text-align: end;
+        color: var(--rust-red);
+    }
     p{
         font-weight: 600;
     }
 
+
     @keyframes subtleFadeInOut {
-        0%, 100% { opacity: 0; transform: scale(1.05) rotate(2deg); }
+        0%, 100% { opacity: 0; transform: scale(1.08) rotate(2deg); }
         20%, 80% { opacity: 1; transform: scale(1) rotate(0deg); }
     }
 
@@ -79,14 +89,19 @@ import BotonAction from "./BotonAction.astro";
     .banner {
         display: flex;
         height: 66vh;
-        margin-top: 60px;
-        
+        margin-top: 30px;
+        mask-image: linear-gradient(black 92%, transparent);
+        gap: 24px;
+        padding: 0 24px 0 24px;
     }
 
     .banner-left {
         flex: 1;
         position: relative;
         overflow: hidden;
+        border-radius: 40px;
+       
+    
     }
 
     .banner-right {
@@ -98,15 +113,16 @@ import BotonAction from "./BotonAction.astro";
     justify-content: center;
     align-items: center;
     height: 100%;
-        
+    border-radius: 40px;
         
         
     }
     .banner-text{
-        display: flex;
+        
         flex-direction: column;
         z-index: 10;
         margin-right: 20px;
+        color: var(--deep-blue);
         
     }
 
@@ -118,12 +134,16 @@ import BotonAction from "./BotonAction.astro";
         height: 100%;
         object-fit: cover;
         opacity: 0;
-        animation: subtleFadeInOut 15s infinite;
+        animation: subtleFadeInOut 30s ;
+        animation-iteration-count: infinite;
         z-index: 10;
+        
     }
     .banner-image:nth-child(1) { animation-delay: 0s; }
-    .banner-image:nth-child(2) { animation-delay: 5s; }
-    .banner-image:nth-child(3) { animation-delay: 10s; }
+    .banner-image:nth-child(2) { animation-delay: 10s; }
+    .banner-image:nth-child(3) { animation-delay: 20s; }
+    .banner-image:nth-child(4) { animation-delay: 30s; }
+    
 
     .banner-content {
         display: flex;
@@ -147,13 +167,14 @@ import BotonAction from "./BotonAction.astro";
         height: 100%;
         object-fit: cover;
         z-index: -1;
+        mask-image: linear-gradient(black 92%, transparent);
     }
     
     .buzo-animation {
         position: absolute;
         object-fit: fill;
         height: 100%;
-        animation: fluidBuzoAnimation 30s infinite ease-in;
+        animation: fluidBuzoAnimation 40s infinite ease-in;
         overflow: hidden;
         z-index: 1;
     }
@@ -165,6 +186,7 @@ import BotonAction from "./BotonAction.astro";
         .banner {
        flex-direction: column;
         height: 95vh;
+        padding: 0 12px 0 12px;
     }
     .cta-button{width: 80%;}
 
