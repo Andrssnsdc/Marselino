@@ -300,32 +300,50 @@ const reviews: Review[] = [
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
-        }
-      });
-    }, { threshold: 0.4 });
+  // IntersectionObserver que observa la visibilidad de las review-cards
+  const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry: IntersectionObserverEntry) => {
+      const targetElement = entry.target as HTMLElement; // Asegurar que es un HTMLElement
 
-    document.querySelectorAll('.review-card').forEach((card) => {
-      observer.observe(card);
+      if (entry.isIntersecting) {
+        targetElement.classList.add('visible');
+      } else {
+        targetElement.classList.remove('visible');
+      }
     });
+  }, { threshold: 0.4 });
 
-    document.querySelectorAll('.read-more').forEach((button) => {
-      button.addEventListener('click', (e) => {
-        const card = e.target.closest('.review-card');
-        card.querySelector('.full-review').classList.add('show');
-      });
-    });
+  // Observamos todas las tarjetas de reseña
+  const reviewCards = document.querySelectorAll('.review-card');
+  reviewCards.forEach((card) => {
+    observer.observe(card);
+  });
 
-    document.querySelectorAll('.close-review').forEach((button) => {
-      button.addEventListener('click', (e) => {
-        const fullReview = e.target.closest('.full-review');
-        fullReview.classList.remove('show');
-      });
+  // Agregar evento a todos los botones "Leer más"
+  const readMoreButtons = document.querySelectorAll('.read-more');
+  readMoreButtons.forEach((button) => {
+    button.addEventListener('click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      const card = target.closest('.review-card') as HTMLElement; // Asegurar que es un HTMLElement
+      const fullReview = card.querySelector('.full-review') as HTMLElement;
+
+      if (fullReview) {
+        fullReview.classList.add('show');
+      }
     });
   });
+
+  // Agregar evento a todos los botones "Cerrar"
+  const closeButtons = document.querySelectorAll('.close-review');
+  closeButtons.forEach((button) => {
+    button.addEventListener('click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      const fullReview = target.closest('.full-review') as HTMLElement;
+
+      if (fullReview) {
+        fullReview.classList.remove('show');
+      }
+    });
+  });
+});
 </script>
