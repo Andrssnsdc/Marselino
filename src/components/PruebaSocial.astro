@@ -1,0 +1,331 @@
+---
+// PruebaSocial.astro
+interface Review {
+  name: string;
+  rating: number;
+  comment: string;
+  productImage: string;
+}
+
+const reviews: Review[] = [
+  {
+    name: "María González",
+    rating: 5,
+    comment: "¡Excelente calidad! El bordado quedó perfecto en mi camiseta. El servicio al cliente fue excepcional y el tiempo de entrega fue más rápido de lo esperado. Definitivamente recomendaré esta tienda a mis amigos y familiares.",
+    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+  },
+  {
+    name: "Carlos Rodríguez",
+    rating: 4,
+    comment: "Muy buen servicio, aunque tardó un poco más de lo esperado. La calidad del producto es excelente y el diseño quedó tal como lo imaginé. Solo sugeriría mejorar los tiempos de entrega para una experiencia perfecta.",
+    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+  },
+  {
+    name: "Ana Martínez",
+    rating: 5,
+    comment: "Superó mis expectativas. Definitivamente volveré a comprar. La atención personalizada y la calidad del bordado son inmejorables. Además, el empaque era muy bonito, lo que hace que sea perfecto para regalar.",
+    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+  },
+  {
+    name: "Ana Martínez",
+    rating: 3,
+    comment: "Superó mis expectativas. Definitivamente volveré a comprar. La atención personalizada y la calidad del bordado son inmejorables. Además, el empaque era muy bonito, lo que hace que sea perfecto para regalar.",
+    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+  }
+];
+---
+
+<section class="social-proof">
+  <div class="reviews-container">
+    {reviews.map((review, index) => (
+      <div class="review-card" data-index={index}>
+        <div class="card-content">
+          <div class="image-container">
+            <img src={review.productImage} alt="Producto" class="product-image" />
+            <div class="rating-container">
+              <div class="rating-circle">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                  <path class="circle-bg"
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path class="circle"
+                    stroke-dasharray={`${review.rating * 20}, 100`}
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <text x="18" y="20.35" class="percentage">{review.rating}</text>
+                </svg>
+              </div>
+              <div class="stars">
+                {[...Array(5)].map((_, i) => (
+                  <span class={`star ${i < review.rating ? 'filled' : ''}`}>★</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div class="review-info">
+            <h3 class="reviewer-name">{review.name}</h3>
+            <p class="review-preview">{review.comment.substring(0, 100)}...</p>
+            <button class="read-more">Leer más</button>
+          </div>
+        </div>
+        <div class="full-review">
+          <p>{review.comment}</p>
+          <button class="close-review">Cerrar</button>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .social-proof {
+    max-width: 90vw;
+    margin: 0 auto;
+    
+  }
+
+  .reviews-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .review-card {
+    width: 320px;
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+  }
+
+  .review-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .review-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-content {
+    position: relative;
+  }
+
+  .image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .review-card:hover .product-image {
+    transform: scale(1.1);
+  }
+
+  .rating-container {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1000px;
+    padding: 10px;
+    
+  }
+
+  .rating-circle {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 5px;
+  }
+
+  .circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 250px;
+  }
+
+  .circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+  }
+
+  .circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    stroke: #57f15c;
+    opacity: 0;
+    transition: all 1s ease;
+  }
+
+  .review-card.visible .circle {
+    opacity: 1;
+    animation: progress 1.5s ease-out forwards;
+  }
+
+  @keyframes progress {
+    0% {
+      stroke-dasharray: 0 100;
+    }
+  }
+
+  .percentage {
+    fill: #eeeeee;
+    font-weight: 500;
+    font-size: 1em;
+    text-anchor: middle;
+  }
+
+  .stars {
+    font-size: 1rem;
+    background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+
+  .star {
+    transition: all 0.3s ease;
+  }
+
+  .star.filled {
+    transform: scale(1.2);
+  }
+
+  .review-info {
+    padding: 1.5rem;
+  }
+
+  .reviewer-name {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .review-preview {
+    color: #7f8c8d;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .read-more, .close-review {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .read-more:hover, .close-review:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .full-review {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(52, 152, 219, 0.95);
+    color: white;
+    padding: 2rem;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(5px);
+  }
+
+  .full-review.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .full-review p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .close-review {
+    margin-top: 1rem;
+    background-color: white;
+    color: #3498db;
+  }
+
+  .close-review:hover {
+    background-color: #f1f1f1;
+    color: #2980b9;
+  }
+
+  @media (max-width: 768px) {
+    .review-card {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('.review-card').forEach((card) => {
+      observer.observe(card);
+    });
+
+    document.querySelectorAll('.read-more').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        const card = e.target.closest('.review-card');
+        card.querySelector('.full-review').classList.add('show');
+      });
+    });
+
+    document.querySelectorAll('.close-review').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        const fullReview = e.target.closest('.full-review');
+        fullReview.classList.remove('show');
+      });
+    });
+  });
+</script>

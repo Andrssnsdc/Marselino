@@ -1,0 +1,137 @@
+---
+import BotonAction from "./BotonAction.astro";
+
+// Section-calidad.astro
+---
+
+<section class="quality-section">
+    <div class="features-container">
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <p>Materiales de la más alta calidad</p>
+      </div>
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <path d="M12 8v4"></path>
+          <path d="M12 16h.01"></path>
+        </svg>
+        <p>Productos con garantía de calidad</p>
+      </div>
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        <p>Pagos 100% seguros</p>
+      </div>
+      <div class="feature">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feature-icon">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <p>Envíos a todo Colombia</p>
+      </div>
+    </div>
+    
+    <div class="cta-container">
+      <h2 class="cta-title">¿QUIERES BORDAR ALGO DIFERENTE?</h2>
+      <p class="cta-description">¡Por supuesto! Tus ideas se hacen realidad con nuestra ayuda. Escríbenos.</p>
+      <h3 class="cta-subtitle">¿TIENES ALGUNA PREGUNTA O INQUIETUD?</h3>
+      <p class="cta-description">Estamos aquí para ayudarte. Escríbenos y resolveremos todas tus dudas.</p>
+        <BotonAction/ textBoton="Contactanos">
+    </div>
+</section>
+  
+<style>
+    h2, p, h3{
+        margin: 0;
+    }
+  .quality-section {
+    max-width: 90vw;
+    
+    color: var(--deep-blue);
+    margin: 0 auto;
+  }
+
+  .features-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 200px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .feature.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .cta-container {display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--lime-green);
+    padding: 24px 12px ;
+    border-radius: 40px;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .cta-container.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .cta-title, .cta-subtitle {
+    color: var(--deep-blue);
+    margin-bottom: 1rem;
+  }
+
+  .cta-description {
+    color: var(--dark-grey);
+    margin-bottom: 2rem;
+  }
+
+  
+</style>
+
+<script >
+    document.addEventListener('astro:page-load', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+  entry.target.classList.add('visible');
+} else {
+  entry.target.classList.remove('visible');
+}
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('.feature, .cta-container').forEach((element) => {
+    observer.observe(element);
+  });
+})
+</script>

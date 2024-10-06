@@ -526,27 +526,31 @@ function initializeComponent() {
         }
     }
 
-    function updatePositionButtons() {
-        embroideryPositionButtons.forEach(button => {
-            const btnElement = button as HTMLButtonElement;
-            btnElement.disabled = selectedPositions.length >= embroideryCount && !selectedPositions.includes(btnElement.dataset.position || '');
-            btnElement.classList.remove('active');
-        });
-        selectedPositions.forEach(position => {
-            const button = Array.from(embroideryPositionButtons).find(btn => (btn as HTMLButtonElement).dataset.position === position);
-            if (button) button.classList.add('active');
-        });
-    }
-
     function togglePosition(position: string) {
-        if (selectedPositions.includes(position)) {
-            selectedPositions = selectedPositions.filter(p => p !== position);
-        } else if (selectedPositions.length < embroideryCount) {
-            selectedPositions.push(position);
+    if (selectedPositions.includes(position)) {
+        // Si la posición ya está seleccionada, la quitamos
+        selectedPositions = selectedPositions.filter(p => p !== position);
+    } else {
+        // Si la posición no está seleccionada, la añadimos
+        if (selectedPositions.length >= embroideryCount) {
+            // Si ya hemos alcanzado el máximo, quitamos la primera posición
+            selectedPositions.shift();
         }
-        updatePositionButtons();
-        updateSVGPositions();
+        selectedPositions.push(position);
     }
+    updatePositionButtons();
+    updateSVGPositions();
+}
+
+function updatePositionButtons() {
+    embroideryPositionButtons.forEach(button => {
+        const btnElement = button as HTMLButtonElement;
+        const isSelected = selectedPositions.includes(btnElement.dataset.position || '');
+        btnElement.classList.toggle('active', isSelected);
+        // Ya no necesitamos deshabilitar los botones
+        btnElement.disabled = false;
+    });
+}
 
     function updateSVGPositions() {
         svgContainer.innerHTML = '';

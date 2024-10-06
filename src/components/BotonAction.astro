@@ -31,7 +31,7 @@ const { textBoton, } = Astro.props;
         border-radius: var(--radius);
         color: var(--white-smoke);
         font-size: 24px;
-        font-weight: 700;
+        font-weight: 500;
         border: 2px solid transparent;
         cursor: pointer;
         overflow: hidden;
@@ -60,7 +60,7 @@ const { textBoton, } = Astro.props;
     justify-content: center;
     z-index: 5; /* Asegura que el contenido esté encima del borde giratorio */
     pointer-events: none; /* Evita que el contenido bloquee interacciones */
-    background: var(--bg);
+    background: rgb(38, 61, 191);
     border-radius: var(--radius);
     padding: 8px;
     gap: 16px;
@@ -78,7 +78,7 @@ const { textBoton, } = Astro.props;
         background: conic-gradient(
             from 0deg,
             transparent,
-            rgb(77, 131, 233),
+            rgb(96, 175, 255),
             transparent
         );
         animation: rotateShimmer var(--speed) linear infinite; /* Animación giratoria */
@@ -103,7 +103,9 @@ const { textBoton, } = Astro.props;
     @media (max-width: 768px) {
         
     .cta-button{width: 90%;
-        margin-bottom: 18px;}
+        margin-bottom: 18px;
+        font-size: 24px;
+    }
    
 
 </style>

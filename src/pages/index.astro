@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Banner from '../components/Banner.astro';
 import Intrucciones from '../components/Intrucciones.astro'
 import ProductSelector from '../components/ProductSelector.astro';
+import PruebaSocial from '../components/PruebaSocial.astro';
+import SectionCalidad from '../components/SectionCalidad.astro';
 
 
 ---
@@ -10,9 +12,10 @@ import ProductSelector from '../components/ProductSelector.astro';
 <Layout title="Welcome to Astro." description=''>
 	<main>
 		<Banner/>
+			<h2>Cómo personalizar tu prenda</h2>
 		<Intrucciones />
 		<section class="container">
-			<h3>Elige tu favorito</h3>
+			<h2>Elige tu favorito</h2>
 			<div class="products">
 				<ProductSelector 
 				title="CAMISETA"
@@ -48,9 +51,19 @@ import ProductSelector from '../components/ProductSelector.astro';
 			  />
 			</div>
 		  </section>
+		  <SectionCalidad />
+		  <h2 class="section-title">Experiencias de Nuestros Clientes</h2>
+  		<PruebaSocial />
 	</main>
+
 	<style>
+		h2{
+			text-align: center;
+			margin: 40px 0;
+		}
+
 		.container { 
+		
     max-width: 75vw; 
     margin: 0 auto; 
 	padding: 0;

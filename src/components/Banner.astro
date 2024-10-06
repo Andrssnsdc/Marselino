@@ -15,7 +15,10 @@ import BotonAction from "./BotonAction.astro";
             <div class="banner-text">
             <h1>Crea tu ropa con bordados personalizados en minutos</h1>
             <h2>Ellos marcan nuestra vida. Ahora, tú conviértelos en la marca de tu prenda favorita</h2>
-            <h3>Lleva a tu amigo contigo a todas partes.</h3>
+            <div class="banner-envio">
+            <h3>Envíos a toda Colombia</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 64 64"><path fill="#2a5f9e" d="M62 32H2c0 5.5 1.5 10.6 4 15h52c2.6-4.4 4-9.5 4-15"/><path fill="#ffe62e" d="M32 2C15.5 2 2 15.4 2 32h60C62 15.4 48.6 2 32 2"/><path fill="#ed4c5c" d="M32 62c11.1 0 20.8-6 26-15H6c5.3 9 14.9 15 26 15"/></svg>
+            </div>
             </div>
         <BotonAction/
         textBoton="Personaliza ahora">  
@@ -37,18 +40,17 @@ import BotonAction from "./BotonAction.astro";
         --cut: 0.1em;
         --bg: radial-gradient(ellipse 80% 50% at 50% 120%, rgba(38, 61, 191), rgba(56, 84, 166, 0.95));
     }
-    h2 {
-        font-weight: 500;
-        
-    }
+
     h3{
-        text-align: end;
-        color: var(--rust-red);
+        font-weight: 300;
     }
-    p{
+    h2{
         font-weight: 600;
     }
-
+ 
+    h1, h2, h3, h4{
+        margin: 0;
+    }
 
     @keyframes subtleFadeInOut {
         0%, 100% { opacity: 0; transform: scale(1.08) rotate(2deg); }
@@ -93,6 +95,7 @@ import BotonAction from "./BotonAction.astro";
         mask-image: linear-gradient(black 92%, transparent);
         gap: 24px;
         padding: 0 24px 0 24px;
+
     }
 
     .banner-left {
@@ -112,17 +115,28 @@ import BotonAction from "./BotonAction.astro";
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    
     border-radius: 40px;
+    padding: 24px;
         
         
     }
     .banner-text{
-        
+        display: flex;
         flex-direction: column;
         z-index: 10;
-        margin-right: 20px;
-        color: var(--deep-blue);
+        color: var(--medium-blue);
+        gap: 32px;
+    }
+
+    .banner-envio{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        justify-content: end;
+        margin-top: 30px;
+        color: var(--rust-red);
         
     }
 
@@ -152,9 +166,10 @@ import BotonAction from "./BotonAction.astro";
         height: 100%;
         z-index: 2;
         color: var(--white-smoke);
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      
         text-align: right;
         align-items: center;
+        gap:18px;
         
         
     }
@@ -184,11 +199,27 @@ import BotonAction from "./BotonAction.astro";
     /* Ajustes responsivos */
     @media (max-width: 768px) {
         .banner {
-       flex-direction: column;
-        height: 95vh;
+        flex-direction: column;
+        height: 100vh;
+        align-items: center;
         padding: 0 12px 0 12px;
+        
+    } 
+    .banner-left{
+       
+        width: 100%;
     }
+    .banner-right{
+        padding: 12px;
+    }
+
+    .banner-text{
+        gap: 12px;
+    }
+    
+
     .cta-button{width: 80%;}
+}
 
     @keyframes fluidBuzoAnimation {
         0% {
