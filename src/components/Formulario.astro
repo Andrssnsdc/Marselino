@@ -1,6 +1,6 @@
 ---
 // CheckoutForm.astro
-import { z } from 'zod';
+import { z } from 'astro:content';
 
 // Definir el esquema de validación
 const formSchema = z.object({
@@ -14,6 +14,18 @@ const formSchema = z.object({
   complemento: z.string().optional(),
 });
 
+// Tipos
+type FormData = z.infer<typeof formSchema>;
+
+interface CartItem {
+  title: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+// Variable para almacenar errores de validación
+let formErrors: Partial<Record<keyof FormData, string>> = {};
+
 // Manejar el envío del formulario
 if (Astro.request.method === 'POST') {
   try {
@@ -21,79 +33,99 @@ if (Astro.request.method === 'POST') {
     const data = Object.fromEntries(formData);
     const validatedData = formSchema.parse(data);
 
-    // Obtener los datos del carrito del sessionStorage
-    const cartData = JSON.parse(sessionStorage.getItem('cart') || '[]');
-    const cartTotal = sessionStorage.getItem('cartTotal') || '0';
+    // Obtener los datos del carrito de las cookies
+    const cartData = Astro.cookies.get('cartData')?.json() as CartItem[] || [];
+    const cartTotal = Astro.cookies.get('cartTotal')?.number() || 0;
 
     // Aquí puedes procesar los datos del formulario y del carrito
-    // Por ejemplo, enviarlos a un servidor, guardarlos en una base de datos, etc.
     console.log('Datos del formulario:', validatedData);
     console.log('Datos del carrito:', cartData);
     console.log('Total del carrito:', cartTotal);
 
+    // Guardar los datos en las cookies
+    Astro.cookies.set('checkoutFormData', JSON.stringify(validatedData), {
+      path: '/',
+      maxAge: 60 * 30, // 30 minutos
+    });
+
     // Redirigir a una página de confirmación
     return Astro.redirect('/confirmacion-pedido');
   } catch (error) {
-    console.error('Error al procesar el formulario:', error);
-    // Manejar errores de validación o procesamiento
+    if (error instanceof z.ZodError) {
+      formErrors = error.flatten().fieldErrors as Partial<Record<keyof FormData, string>>;
+    } else {
+      console.error('Error al procesar el formulario:', error);
+    }
   }
 }
+
+// Obtener los datos del carrito de las cookies para mostrar en el formulario
+const cartData = Astro.cookies.get('cartData')?.json() as CartItem[] || [];
+const cartTotal = Astro.cookies.get('cartTotal')?.number() || 0;
 ---
 
 <div class="checkout-container">
-    <form id="checkoutForm" method="POST" class="checkout-form">
-      <div class="form-header">
-        <h2>Finalizar Compra</h2>
-        <div class="progress-bar">
-          <div class="progress-step active">Carrito</div>
-          <div class="progress-step active">Datos</div>
-          <div class="progress-step">Pago</div>
+  <form id="checkoutForm" method="POST" class="checkout-form">
+    <div class="form-header">
+      <h2>Finalizar Compra</h2>
+      <div class="progress-bar">
+        <div class="progress-step active">Carrito</div>
+        <div class="progress-step active">Datos</div>
+        <div class="progress-step">Pago</div>
+      </div>
+    </div>
+    <div class="form-columns">
+      <div class="form-column">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" required>
+          {formErrors.nombre && <p class="error">{formErrors.nombre}</p>}
+        </div>
+        <div class="form-group">
+          <label for="apellidos">Apellidos:</label>
+          <input type="text" id="apellidos" name="apellidos" required>
+          {formErrors.apellidos && <p class="error">{formErrors.apellidos}</p>}
+        </div>
+        <div class="form-group">
+          <label for="celular">Celular:</label>
+          <input type="tel" id="celular" name="celular" required>
+          {formErrors.celular && <p class="error">{formErrors.celular}</p>}
+        </div>
+        <div class="form-group">
+          <label for="correo">Correo electrónico:</label>
+          <input type="email" id="correo" name="correo" required>
+          {formErrors.correo && <p class="error">{formErrors.correo}</p>}
         </div>
       </div>
-      <div class="form-columns">
-        <div class="form-column">
-          <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-          </div>
-          <div class="form-group">
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" required>
-          </div>
-          <div class="form-group">
-            <label for="celular">Celular:</label>
-            <input type="tel" id="celular" name="celular" required>
-          </div>
-          <div class="form-group">
-            <label for="correo">Correo electrónico:</label>
-            <input type="email" id="correo" name="correo" required>
-          </div>
+      <div class="form-column">
+        <div class="form-group">
+          <label for="identificacion">Número de identificación:</label>
+          <input type="text" id="identificacion" name="identificacion" required>
+          {formErrors.identificacion && <p class="error">{formErrors.identificacion}</p>}
         </div>
-        <div class="form-column">
-          <div class="form-group">
-            <label for="identificacion">Número de identificación:</label>
-            <input type="text" id="identificacion" name="identificacion" required>
-          </div>
-          <div class="form-group">
-            <label for="ciudad">Ciudad:</label>
-            <input type="text" id="ciudad" name="ciudad" required>
-          </div>
-          <div class="form-group">
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" required>
-          </div>
-          <div class="form-group">
-            <label for="complemento">Complemento dirección:</label>
-            <input type="text" id="complemento" name="complemento">
-          </div>
+        <div class="form-group">
+          <label for="ciudad">Ciudad:</label>
+          <input type="text" id="ciudad" name="ciudad" required>
+          {formErrors.ciudad && <p class="error">{formErrors.ciudad}</p>}
+        </div>
+        <div class="form-group">
+          <label for="direccion">Dirección:</label>
+          <input type="text" id="direccion" name="direccion" required>
+          {formErrors.direccion && <p class="error">{formErrors.direccion}</p>}
+        </div>
+        <div class="form-group">
+          <label for="complemento">Complemento dirección:</label>
+          <input type="text" id="complemento" name="complemento">
+          {formErrors.complemento && <p class="error">{formErrors.complemento}</p>}
         </div>
       </div>
-      <div id="cartSummary" class="cart-summary">
-        <!-- Resumen del carrito se llenará con JavaScript -->
-      </div>
-      <button type="submit" class="submit-btn">Proceder al Pago</button>
-    </form>
-  </div>
+    </div>
+    <div id="cartSummary" class="cart-summary">
+      <!-- Resumen del carrito se llenará con JavaScript -->
+    </div>
+    <button type="submit" class="submit-btn">Proceder al Pago</button>
+  </form>
+</div>
   
   <style>
     .checkout-container {
@@ -251,13 +283,33 @@ if (Astro.request.method === 'POST') {
   </style>
   
   <script>
-  function initializeCheckoutForm() {
+interface CartItem {
+  title: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+interface FormData {
+  nombre: string;
+  apellidos: string;
+  celular: string;
+  correo: string;
+  identificacion: string;
+  ciudad: string;
+  direccion: string;
+  complemento?: string;
+}
+
+function initializeCheckoutForm(): void {
   const cartSummary = document.getElementById('cartSummary');
-  const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
-  const cartTotal = sessionStorage.getItem('cartTotal') || '0';
+  if (!cartSummary) return;
+
+  // Obtener los datos del carrito de las cookies del cliente
+  const cartData = JSON.parse(document.cookie.replace(/(?:(?:^|.*;\s*)cartData\s*\=\s*([^;]*).*$)|^.*$/, "$1") || '[]') as CartItem[];
+  const cartTotal = parseFloat(document.cookie.replace(/(?:(?:^|.*;\s*)cartTotal\s*\=\s*([^;]*).*$)|^.*$/, "$1") || '0');
 
   let summaryHTML = '<h3>Resumen del Carrito</h3>';
-  cart.forEach((item, index) => {
+  cartData.forEach((item: CartItem) => {
     summaryHTML += `
       <div class="cart-item">
         <p>${item.title} (x${item.quantity})</p>
@@ -265,50 +317,75 @@ if (Astro.request.method === 'POST') {
       </div>
     `;
   });
-  summaryHTML += `<div class="cart-item"><strong>Total:</strong> <strong>$${parseInt(cartTotal).toLocaleString()}</strong></div>`;
+  summaryHTML += `<div class="cart-item"><strong>Total:</strong> <strong>$${cartTotal.toLocaleString()}</strong></div>`;
 
-  if (cartSummary) {
-    cartSummary.innerHTML = summaryHTML;
+  cartSummary.innerHTML = summaryHTML;
+
+  const form = document.getElementById('checkoutForm') as HTMLFormElement | null;
+  if (form) {
+    form.addEventListener('submit', (e: Event) => {
+      e.preventDefault();
+      if (validateForm()) {
+        form.submit(); // Envía el formulario al servidor
+      }
+    });
   }
-
-  // Validación del formulario en el lado del cliente
-  const form = document.getElementById('checkoutForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      // Si la validación pasa, redirige a la página de resumen de orden
-      redirectToOrderSummary();
-    }
-  });
 }
 
-function validateForm() {
-  // Implementa la validación del formulario aquí
-  // Retorna true si el formulario es válido, false si no lo es
-  return true; // Placeholder
-}
-
-function redirectToOrderSummary() {
-  const form = document.getElementById('checkoutForm');
-  const formData = new FormData(form);
-  const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
-  const cartTotal = sessionStorage.getItem('cartTotal') || '0';
-
-  // Crear un objeto con todos los datos
-  const data = {
-    cartData: encodeURIComponent(JSON.stringify(cart)),
-    subtotal: cartTotal,
-    ...Object.fromEntries(formData)
+function validateForm(): boolean {
+  const form = document.getElementById('checkoutForm') as HTMLFormElement;
+  const formData: FormData = {
+    nombre: (form.elements.namedItem('nombre') as HTMLInputElement).value,
+    apellidos: (form.elements.namedItem('apellidos') as HTMLInputElement).value,
+    celular: (form.elements.namedItem('celular') as HTMLInputElement).value,
+    correo: (form.elements.namedItem('correo') as HTMLInputElement).value,
+    identificacion: (form.elements.namedItem('identificacion') as HTMLInputElement).value,
+    ciudad: (form.elements.namedItem('ciudad') as HTMLInputElement).value,
+    direccion: (form.elements.namedItem('direccion') as HTMLInputElement).value,
+    complemento: (form.elements.namedItem('complemento') as HTMLInputElement).value,
   };
 
-  // Convertir el objeto en una cadena de consulta URL
-  const queryString = Object.keys(data)
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join('&');
+  const errors: Partial<Record<keyof FormData, string>> = {};
 
-  // Redirigir a la página de resumen de orden con los datos
-  window.location.href = `/confirmationpage${queryString}`;
+  if (formData.nombre.length < 2) {
+    errors.nombre = "El nombre debe tener al menos 2 caracteres";
+  }
+
+  if (formData.apellidos.length < 2) {
+    errors.apellidos = "Los apellidos deben tener al menos 2 caracteres";
+  }
+
+  if (!/^\d{10}$/.test(formData.celular)) {
+    errors.celular = "El número de celular debe tener 10 dígitos";
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
+    errors.correo = "Correo electrónico inválido";
+  }
+
+  if (formData.identificacion.length < 5) {
+    errors.identificacion = "El número de identificación debe tener al menos 5 caracteres";
+  }
+
+  if (formData.ciudad.length < 2) {
+    errors.ciudad = "La ciudad debe tener al menos 2 caracteres";
+  }
+
+  if (formData.direccion.length < 5) {
+    errors.direccion = "La dirección debe tener al menos 5 caracteres";
+  }
+
+  // Mostrar errores en el formulario
+  Object.keys(errors).forEach((key) => {
+    const errorElement = document.getElementById(`${key}-error`);
+    if (errorElement) {
+      errorElement.textContent = errors[key as keyof FormData] || '';
+    }
+  });
+
+  return Object.keys(errors).length === 0;
 }
 
-document.addEventListener('astro:page-load', initializeCheckoutForm);
+document.addEventListener('DOMContentLoaded', initializeCheckoutForm);
 </script>
+
