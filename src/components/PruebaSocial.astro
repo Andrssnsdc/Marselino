@@ -1,5 +1,4 @@
 ---
-// PruebaSocial.astro
 interface Review {
   name: string;
   rating: number;
@@ -18,53 +17,62 @@ const reviews: Review[] = [
     name: "Carlos Rodríguez",
     rating: 4,
     comment: "Muy buen servicio, aunque tardó un poco más de lo esperado. La calidad del producto es excelente y el diseño quedó tal como lo imaginé. Solo sugeriría mejorar los tiempos de entrega para una experiencia perfecta.",
-    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+    productImage: "https://mrbone.co/wp-content/uploads/2022/08/Buzo-1-5-carita.jpg"
   },
   {
     name: "Ana Martínez",
     rating: 5,
     comment: "Superó mis expectativas. Definitivamente volveré a comprar. La atención personalizada y la calidad del bordado son inmejorables. Además, el empaque era muy bonito, lo que hace que sea perfecto para regalar.",
-    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+    productImage: "https://mrbone.co/wp-content/uploads/2022/08/Foto-saco-1.png"
   },
   {
     name: "Ana Martínez",
     rating: 3,
     comment: "Superó mis expectativas. Definitivamente volveré a comprar. La atención personalizada y la calidad del bordado son inmejorables. Además, el empaque era muy bonito, lo que hace que sea perfecto para regalar.",
-    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_1980-d1968d3b0b2f80c53817269341003386-640-0.webp"
+    productImage: "https://acdn.mitiendanube.com/stores/003/039/947/products/img_0483_jpg-afbb0d6c910397267316974928236237-1024-1024.jpeg"
+  },
+  {
+    name: "Carlos Rodríguez",
+    rating: 4,
+    comment: "Muy buen servicio, aunque tardó un poco más de lo esperado. La calidad del producto es excelente y el diseño quedó tal como lo imaginé. Solo sugeriría mejorar los tiempos de entrega para una experiencia perfecta.",
+    productImage: "https://mrbone.co/wp-content/uploads/2022/08/Buzo-1-5-carita.jpg"
   }
+
 ];
 ---
 
 <section class="social-proof">
   <div class="reviews-container">
-    {reviews.map((review, index) => (
-      <div class="review-card" data-index={index}>
+    {reviews.map((review) => (
+      <div class="review-card">
+        <div class="quantity-indicator">
+          <div class="stars">
+            {Array.from({ length: 5 }, (_, i) => (
+              <span>{i < review.rating ? '★' : '☆'}</span>
+            ))}
+          </div>
+          <div class="rating-container">
+            <div class="rating-circle">
+              <svg viewBox="0 0 36 36" class="circular-chart">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle"
+                  stroke-dasharray={`${review.rating * 20}, 100`}
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="22" class="percentage">{review.rating}</text>
+              </svg>
+            </div>
+          </div>      
+        </div>      
         <div class="card-content">
           <div class="image-container">
             <img src={review.productImage} alt="Producto" class="product-image" />
-            <div class="rating-container">
-              <div class="rating-circle">
-                <svg viewBox="0 0 36 36" class="circular-chart">
-                  <path class="circle-bg"
-                    d="M18 2.0845
-                      a 15.9155 15.9155 0 0 1 0 31.831
-                      a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path class="circle"
-                    stroke-dasharray={`${review.rating * 20}, 100`}
-                    d="M18 2.0845
-                      a 15.9155 15.9155 0 0 1 0 31.831
-                      a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <text x="18" y="20.35" class="percentage">{review.rating}</text>
-                </svg>
-              </div>
-              <div class="stars">
-                {[...Array(5)].map((_, i) => (
-                  <span class={`star ${i < review.rating ? 'filled' : ''}`}>★</span>
-                ))}
-              </div>
-            </div>
           </div>
           <div class="review-info">
             <h3 class="reviewer-name">{review.name}</h3>
@@ -84,7 +92,7 @@ const reviews: Review[] = [
 <style>
   .social-proof {
     max-width: 90vw;
-    margin: 0 auto;
+    margin: 60px auto;
     
   }
 
@@ -93,11 +101,12 @@ const reviews: Review[] = [
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
+    ;
   }
 
   .review-card {
-    width: 320px;
-    background-color: white;
+    width: 210px;
+    background: linear-gradient(to top, rgba(242, 242, 242, 1) 40%, rgba(255, 255, 255, 0.666) 100%);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
@@ -115,6 +124,12 @@ const reviews: Review[] = [
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 
+  .quantity-indicator{
+    
+    justify-content: end;
+    margin: 0 50px;
+    display: flex;
+  }
   .card-content {
     position: relative;
   }
@@ -123,10 +138,12 @@ const reviews: Review[] = [
     position: relative;
     height: 200px;
     overflow: hidden;
+    z-index: 1;
   }
   
 
   .product-image {
+    mask-image: linear-gradient(black 80%, transparent);
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -140,12 +157,13 @@ const reviews: Review[] = [
   .rating-container {
     position: absolute;
     top: -10px;
-    right: -10px;
+    left: -10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 1000px;
     padding: 10px;
+    z-index: 10;
     
   }
 
@@ -157,7 +175,7 @@ const reviews: Review[] = [
 
   .circular-chart {
     display: block;
-    margin: 10px auto;
+    margin: 5px auto;
     max-width: 80%;
     max-height: 250px;
   }
@@ -172,7 +190,7 @@ const reviews: Review[] = [
     fill: none;
     stroke-width: 2.8;
     stroke-linecap: round;
-    stroke: #57f15c;
+    stroke: #2cc631;
     opacity: 0;
     transition: all 1s ease;
   }
@@ -189,15 +207,15 @@ const reviews: Review[] = [
   }
 
   .percentage {
-    fill: #eeeeee;
-    font-weight: 500;
+    fill: var(--medium-blue);
+    font-weight: 700;
     font-size: 1em;
     text-anchor: middle;
   }
 
   .stars {
-    font-size: 1rem;
-    background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    font-size: 1.5rem;
+    background: linear-gradient(45deg, #ffc830 0%, #fdb765 99%, #fdbd6e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     padding: 5px 10px;
@@ -213,17 +231,23 @@ const reviews: Review[] = [
   }
 
   .review-info {
-    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 12px;
   }
 
   .reviewer-name {
     margin: 0;
-    color: #2c3e50;
+    color: var(--medium-blue);
     font-size: 1.2rem;
     font-weight: bold;
   }
 
   .review-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     color: #7f8c8d;
     margin: 0.5rem 0;
     font-size: 0.9rem;
@@ -231,8 +255,8 @@ const reviews: Review[] = [
   }
 
   .read-more, .close-review {
-    background-color: #3498db;
-    color: white;
+    background-color: rgba(38, 61, 191, 0.759);
+    color: var(--white-smoke);
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -243,7 +267,7 @@ const reviews: Review[] = [
   }
 
   .read-more:hover, .close-review:hover {
-    background-color: #2980b9;
+    background-color: var(--medium-blue);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
@@ -254,8 +278,9 @@ const reviews: Review[] = [
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(52, 152, 219, 0.95);
-    color: white;
+    background-color: rgba(38, 61, 191, 0.473);
+    color: var(--white-smoke);
+    font-weight: 500;
     padding: 2rem;
     box-sizing: border-box;
     opacity: 0;
@@ -266,24 +291,25 @@ const reviews: Review[] = [
     justify-content: center;
     align-items: center;
     text-align: center;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(7px);
   }
 
   .full-review.show {
     opacity: 1;
     visibility: visible;
+    z-index: 100;
   }
 
   .full-review p {
     margin-bottom: 1rem;
-    font-size: 1rem;
-    line-height: 1.6;
+    
+    line-height: 1.2;
   }
 
   .close-review {
-    margin-top: 1rem;
+    
     background-color: white;
-    color: #3498db;
+    color: var(--medium-blue);
   }
 
   .close-review:hover {
@@ -292,6 +318,9 @@ const reviews: Review[] = [
   }
 
   @media (max-width: 768px) {
+    .social-proof {
+        width: 100vw;
+    }
     .review-card {
       width: 100%;
     }
@@ -311,7 +340,7 @@ const reviews: Review[] = [
         targetElement.classList.remove('visible');
       }
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.2 });
 
   // Observamos todas las tarjetas de reseña
   const reviewCards = document.querySelectorAll('.review-card');

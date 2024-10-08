@@ -1,24 +1,46 @@
-
 ---
 // CartComponent.astro
 ---
 
 <div class="container">
   <button class="cart-button" id="openCart">
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="#f2f2f2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M11.5 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8H17.67a2 2 0 0 1 1.977 2.304l-.5 3.248"/><path d="M9 11V6a3 3 0 0 1 6 0v5m0 8l2 2l4-4"/></g></svg>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="25"
+      height="25"
+      viewBox="0 0 24 24"
+      ><g
+        fill="none"
+        stroke="#f2f2f2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        ><path
+          d="M11.5 21H8.574a3 3 0 0 1-2.965-2.544l-1.255-8.152A2 2 0 0 1 6.331 8H17.67a2 2 0 0 1 1.977 2.304l-.5 3.248"
+        ></path><path d="M9 11V6a3 3 0 0 1 6 0v5m0 8l2 2l4-4"></path></g
+      ></svg
+    >
     <span class="cart-count" id="cartCount">0</span>
   </button>
 </div>
 
 <div class="cart-panel" id="cartPanel">
   <div class="cart-header">
-    <h2>Carrito de Compras</h2>
+    <h2>Carrito</h2>
+
     <button class="close-cart" id="closeCart">&times;</button>
   </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-total" id="cartTotal">Total: $0.00</div>
-  <textarea id="customerComments" placeholder="Deja tus comentarios aquí" class="customer-comments"></textarea>
-  <button class="checkout-btn" id="checkoutBtn">Proceder al pago</button>
+  <div class="cart-layout">
+    <div class="cart-items" id="cartItems"></div>
+    <div>
+      <div class="cart-total" id="cartTotal">Total: $0.00</div>
+      <textarea
+        id="customerComments"
+        placeholder="Deja tus comentarios aquí"
+        class="customer-comments"></textarea>
+      <button class="checkout-btn" id="checkoutBtn">Proceder al pago</button>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -26,7 +48,9 @@
 <div class="alert" id="deleteAlert">
   <p>¿Estás seguro de que quieres eliminar este producto?</p>
   <div class="alert-buttons">
-    <button class="alert-btn confirm-btn" id="confirmDelete">Sí, eliminar</button>
+    <button class="alert-btn confirm-btn" id="confirmDelete"
+      >Sí, eliminar</button
+    >
     <button class="alert-btn cancel-btn" id="cancelDelete">Cancelar</button>
   </div>
 </div>
@@ -69,7 +93,7 @@
   .cart-button:hover {
     background-color: var(--medium-blue);
     transform: scale(1.03);
-    transition: ease-in-out 400ms; 
+    transition: ease-in-out 400ms;
   }
 
   .cart-count {
@@ -78,6 +102,13 @@
     border-radius: 9999px;
     padding: 2px 6px;
     font-size: 12px;
+  }
+  .cart-layout{
+    display: flex;
+    height: 80vh;
+    justify-content: space-between;
+    flex-direction: column;
+    align-content: space-between;
   }
 
   .cart-panel {
@@ -88,7 +119,7 @@
     max-width: 400px;
     height: 100%;
     background-color: var(--white-smoke);
-    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     transition: right 0.3s ease-out;
     overflow-y: auto;
     z-index: 1001;
@@ -147,8 +178,6 @@
     color: var(--deep-blue);
   }
 
-  
-
   .item-price {
     color: var(--rust-red);
     font-weight: 600;
@@ -196,7 +225,7 @@
     background-color: var(--rust-red);
     color: var(--white-smoke);
     border: none;
-    
+
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -254,7 +283,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     display: none;
     z-index: 999;
   }
@@ -267,7 +296,7 @@
     background-color: var(--white-smoke);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1002;
     display: none;
   }
@@ -298,7 +327,6 @@
   .cancel-btn {
     background-color: var(--rust-red);
     color: var(--white-smoke);
-    
   }
 
   .cancel-btn:hover {
@@ -332,7 +360,6 @@
   }
 
   .item-image {
-    
     width: 100%;
     max-width: 150px;
     height: auto;
@@ -348,7 +375,7 @@
 </style>
 
 <script>
- interface CartItem {
+  interface CartItem {
     title: string; // Título del producto
     size: string; // Talla del producto
     color: string; // Color del producto
@@ -357,67 +384,69 @@
     imageUrl: string; // URL de la imagen del producto
     quantity: number; // Cantidad de productos en el carrito
     totalPrice: number; // Precio total del producto
-}
+  }
 
-// Arreglo para almacenar los artículos del carrito
-let cart: CartItem[] = [];
-let itemToDelete: number | null = null; // Almacena el índice del artículo a eliminar
+  // Arreglo para almacenar los artículos del carrito
+  let cart: CartItem[] = [];
+  let itemToDelete: number | null = null; // Almacena el índice del artículo a eliminar
 
-function initializeCart(): void {
+  function initializeCart(): void {
     // Selecciona elementos del DOM
-    const cartButton = document.getElementById('openCart') as HTMLElement;
-    const cartPanel = document.getElementById('cartPanel') as HTMLElement;
-    const closeCart = document.getElementById('closeCart') as HTMLElement;
-    const cartItems = document.getElementById('cartItems') as HTMLElement;
-    const cartTotal = document.getElementById('cartTotal') as HTMLElement;
-    const cartCount = document.getElementById('cartCount') as HTMLElement;
-    const overlay = document.getElementById('overlay') as HTMLElement;
-    const checkoutBtn = document.getElementById('checkoutBtn') as HTMLElement;
-    const deleteAlert = document.getElementById('deleteAlert') as HTMLElement;
-    const confirmDelete = document.getElementById('confirmDelete') as HTMLElement;
-    const cancelDelete = document.getElementById('cancelDelete') as HTMLElement;
+    const cartButton = document.getElementById("openCart") as HTMLElement;
+    const cartPanel = document.getElementById("cartPanel") as HTMLElement;
+    const closeCart = document.getElementById("closeCart") as HTMLElement;
+    const cartItems = document.getElementById("cartItems") as HTMLElement;
+    const cartTotal = document.getElementById("cartTotal") as HTMLElement;
+    const cartCount = document.getElementById("cartCount") as HTMLElement;
+    const overlay = document.getElementById("overlay") as HTMLElement;
+    const checkoutBtn = document.getElementById("checkoutBtn") as HTMLElement;
+    const deleteAlert = document.getElementById("deleteAlert") as HTMLElement;
+    const confirmDelete = document.getElementById(
+      "confirmDelete",
+    ) as HTMLElement;
+    const cancelDelete = document.getElementById("cancelDelete") as HTMLElement;
 
     // Cargar el carrito guardado en el sessionStorage
     function loadCart(): void {
-        const savedCart = sessionStorage.getItem('cart');
-        if (savedCart) {
-            cart = JSON.parse(savedCart);
-            updateCartDisplay(); // Actualiza la visualización del carrito
-        }
+      const savedCart = sessionStorage.getItem("cart");
+      if (savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCartDisplay(); // Actualiza la visualización del carrito
+      }
     }
 
     // Actualizar la visualización del carrito
     function updateCartDisplay(): void {
-        cartItems.innerHTML = ''; // Limpia los elementos actuales del carrito
-        let total = 0;
-        let count = 0;
+      cartItems.innerHTML = ""; // Limpia los elementos actuales del carrito
+      let total = 0;
+      let count = 0;
 
-        // Si el carrito está vacío, muestra un mensaje
-        if (cart.length === 0) {
-            cartItems.innerHTML = `
+      // Si el carrito está vacío, muestra un mensaje
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
                 <div class="empty-cart">
                     <p>Tu carrito está vacío</p>
                     <button class="add-products-btn" onclick="window.location.href='/'">Agregar productos</button>
                 </div>
             `;
-        } else {
-            // Recorre cada artículo en el carrito y actualiza la visualización
-            cart.forEach((item, index) => {
-                const itemTotal = item.totalPrice * item.quantity; // Calcula el total por artículo
-                total += itemTotal; // Acumula el total general
-                count += item.quantity; // Acumula la cantidad total
+      } else {
+        // Recorre cada artículo en el carrito y actualiza la visualización
+        cart.forEach((item, index) => {
+          const itemTotal = item.totalPrice * item.quantity; // Calcula el total por artículo
+          total += itemTotal; // Acumula el total general
+          count += item.quantity; // Acumula la cantidad total
 
-                // Crear el elemento visual del artículo en el carrito
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
-                itemElement.innerHTML = `
+          // Crear el elemento visual del artículo en el carrito
+          const itemElement = document.createElement("div");
+          itemElement.classList.add("cart-item");
+          itemElement.innerHTML = `
                     <img src="${item.imageUrl}" alt="${item.title}" class="item-image">
                     <div class="item-details">
                         <div class="item-name">${item.title}</div>
                         <div class="item-info">Talla: ${item.size}</div>
                         <div class="item-info">Color: ${item.color}</div>
                         <div class="item-info">Bordados: ${item.embroideryCount}</div>
-                        <div class="item-info">Posiciones: ${item.selectedPositions.join(', ')}</div>
+                        <div class="item-info">Posiciones: ${item.selectedPositions.join(", ")}</div>
                         <div class="item-price">$${itemTotal.toLocaleString()}</div>
                         <div class="item-controls">
                             <div class="quantity-control">
@@ -430,110 +459,118 @@ function initializeCart(): void {
                     </div>
                     <button class="delete-btn" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24.975609756097562" viewBox="0 0 1025 1024"><path fill="#f2f2f2" d="M960.865 192h-896q-26 0-45-18.5t-19-45t18.5-45.5t45.5-19h320q0-26 18.5-45t45.5-19h128q27 0 45.5 19t18.5 45h320q26 0 45 19t19 45.5t-19 45t-45 18.5m0 704q0 53-37.5 90.5t-90.5 37.5h-640q-53 0-90.5-37.5t-37.5-90.5V256h896zm-640-448q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5zm256 0q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5zm256 0q0-26-19-45t-45.5-19t-45 19t-18.5 45v384q0 27 18.5 45.5t45 18.5t45.5-18.5t19-45.5z"/></svg></button>
                 `;
-                cartItems.appendChild(itemElement); // Añadir el nuevo elemento al carrito
-            });
-        }
+          cartItems.appendChild(itemElement); // Añadir el nuevo elemento al carrito
+        });
+      }
 
-        // Actualiza el total y la cuenta de artículos en el carrito
-        cartTotal.textContent = `Total: $${total.toLocaleString()}`;
-        cartCount.textContent = count.toString();
-        sessionStorage.setItem('cartTotal', total.toString()); // Guardar el total en el sessionStorage
+      // Actualiza el total y la cuenta de artículos en el carrito
+      cartTotal.textContent = `Total: $${total.toLocaleString()}`;
+      cartCount.textContent = count.toString();
+      sessionStorage.setItem("cartTotal", total.toString()); // Guardar el total en el sessionStorage
     }
 
     // Funciones para abrir y cerrar el carrito
     function openCart(): void {
-        cartPanel.classList.add('open');
-        overlay.style.display = 'block'; // Muestra la superposición
+      cartPanel.classList.add("open");
+      overlay.style.display = "block"; // Muestra la superposición
     }
 
     function closeCartPanel(): void {
-        cartPanel.classList.remove('open');
-        overlay.style.display = 'none'; // Oculta la superposición
+      cartPanel.classList.remove("open");
+      overlay.style.display = "none"; // Oculta la superposición
     }
 
     // Mostrar alerta de eliminación de un artículo
     function showDeleteAlert(index: number): void {
-        itemToDelete = index; // Guarda el índice del artículo a eliminar
-        deleteAlert.style.display = 'block'; // Muestra la alerta
-        overlay.style.display = 'block'; // Muestra la superposición
+      itemToDelete = index; // Guarda el índice del artículo a eliminar
+      deleteAlert.style.display = "block"; // Muestra la alerta
+      overlay.style.display = "block"; // Muestra la superposición
     }
 
     // Ocultar alerta de eliminación
     function hideDeleteAlert(): void {
-        deleteAlert.style.display = 'none'; // Oculta la alerta
-        overlay.style.display = 'none'; // Oculta la superposición
-        itemToDelete = null; // Reinicia el índice
+      deleteAlert.style.display = "none"; // Oculta la alerta
+      overlay.style.display = "none"; // Oculta la superposición
+      itemToDelete = null; // Reinicia el índice
     }
 
     // Configurar eventos de clic
-    cartButton.addEventListener('click', openCart); // Abre el carrito
-    closeCart.addEventListener('click', closeCartPanel); // Cierra el carrito
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-            closeCartPanel(); // Cierra el carrito si se hace clic en la superposición
-            hideDeleteAlert(); // Oculta la alerta de eliminación
-        }
+    cartButton.addEventListener("click", openCart); // Abre el carrito
+    closeCart.addEventListener("click", closeCartPanel); // Cierra el carrito
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        closeCartPanel(); // Cierra el carrito si se hace clic en la superposición
+        hideDeleteAlert(); // Oculta la alerta de eliminación
+      }
     });
 
     // Manejar clics en los elementos del carrito
-    cartItems.addEventListener('click', (e) => {
-        if (e.target instanceof HTMLElement && e.target.classList.contains('quantity-btn')) {
-            const index = parseInt(e.target.getAttribute('data-index') || '0');
-            if (e.target.classList.contains('plus')) {
-                cart[index].quantity++; // Aumenta la cantidad
-            } else if (e.target.classList.contains('minus')) {
-                if (cart[index].quantity > 1) {
-                    cart[index].quantity--; // Disminuye la cantidad
-                } else {
-                    showDeleteAlert(index); // Muestra alerta si la cantidad es 1
-                    return;
-                }
-            }
-            sessionStorage.setItem('cart', JSON.stringify(cart)); // Guarda el carrito en el sessionStorage
-            updateCartDisplay(); // Actualiza la visualización del carrito
-        } else if (e.target instanceof HTMLElement && e.target.classList.contains('delete-btn')) {
-            const index = parseInt(e.target.getAttribute('data-index') || '0');
-            showDeleteAlert(index); // Muestra alerta de eliminación
+    cartItems.addEventListener("click", (e) => {
+      if (
+        e.target instanceof HTMLElement &&
+        e.target.classList.contains("quantity-btn")
+      ) {
+        const index = parseInt(e.target.getAttribute("data-index") || "0");
+        if (e.target.classList.contains("plus")) {
+          cart[index].quantity++; // Aumenta la cantidad
+        } else if (e.target.classList.contains("minus")) {
+          if (cart[index].quantity > 1) {
+            cart[index].quantity--; // Disminuye la cantidad
+          } else {
+            showDeleteAlert(index); // Muestra alerta si la cantidad es 1
+            return;
+          }
         }
+        sessionStorage.setItem("cart", JSON.stringify(cart)); // Guarda el carrito en el sessionStorage
+        updateCartDisplay(); // Actualiza la visualización del carrito
+      } else if (
+        e.target instanceof HTMLElement &&
+        e.target.classList.contains("delete-btn")
+      ) {
+        const index = parseInt(e.target.getAttribute("data-index") || "0");
+        showDeleteAlert(index); // Muestra alerta de eliminación
+      }
     });
 
     // Confirmar eliminación de un artículo
-    confirmDelete.addEventListener('click', () => {
-        if (itemToDelete !== null) {
-            cart.splice(itemToDelete, 1); // Elimina el artículo del carrito
-            sessionStorage.setItem('cart', JSON.stringify(cart)); // Guarda el carrito actualizado
-            updateCartDisplay(); // Actualiza la visualización del carrito
-        }
-        hideDeleteAlert(); // Oculta la alerta de eliminación
+    confirmDelete.addEventListener("click", () => {
+      if (itemToDelete !== null) {
+        cart.splice(itemToDelete, 1); // Elimina el artículo del carrito
+        sessionStorage.setItem("cart", JSON.stringify(cart)); // Guarda el carrito actualizado
+        updateCartDisplay(); // Actualiza la visualización del carrito
+      }
+      hideDeleteAlert(); // Oculta la alerta de eliminación
     });
 
-    cancelDelete.addEventListener('click', hideDeleteAlert); // Cierra la alerta si se cancela
+    cancelDelete.addEventListener("click", hideDeleteAlert); // Cierra la alerta si se cancela
 
     // Manejar clic en el botón de checkout
-    checkoutBtn.addEventListener('click', () => {
-        const comments = (document.getElementById('customerComments') as HTMLInputElement).value; // Obtener comentarios
-        sessionStorage.setItem('customerComments', comments); // Guarda comentarios en el sessionStorage
-        console.log('Procediendo al pago');
-        window.location.href = '/checkout'; // Redirige al usuario a la página de pago
+    checkoutBtn.addEventListener("click", () => {
+      const comments = (
+        document.getElementById("customerComments") as HTMLInputElement
+      ).value; // Obtener comentarios
+      sessionStorage.setItem("customerComments", comments); // Guarda comentarios en el sessionStorage
+      console.log("Procediendo al pago");
+      window.location.href = "/checkout"; // Redirige al usuario a la página de pago
     });
 
     loadCart(); // Cargar el carrito al inicializar
 
     // Escuchar cambios en el sessionStorage
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'cart') {
-            cart = JSON.parse(event.newValue || '[]'); // Actualiza el carrito si hay cambios en el sessionStorage
-            updateCartDisplay(); // Actualiza la visualización del carrito
-        }
+    window.addEventListener("storage", (event) => {
+      if (event.key === "cart") {
+        cart = JSON.parse(event.newValue || "[]"); // Actualiza el carrito si hay cambios en el sessionStorage
+        updateCartDisplay(); // Actualiza la visualización del carrito
+      }
     });
 
     // Evento personalizado para actualizar el carrito
-    document.addEventListener('cartUpdated', () => {
-        loadCart(); // Cargar el carrito al recibir la actualización
+    document.addEventListener("cartUpdated", () => {
+      loadCart(); // Cargar el carrito al recibir la actualización
     });
-}
+  }
 
-// Inicializa el carrito al cargar la página y después de transiciones de vista
-document.addEventListener('astro:page-load', initializeCart);
-document.addEventListener('astro:after-swap', initializeCart);
+  // Inicializa el carrito al cargar la página y después de transiciones de vista
+  document.addEventListener("astro:page-load", initializeCart);
+  document.addEventListener("astro:after-swap", initializeCart);
 </script>
