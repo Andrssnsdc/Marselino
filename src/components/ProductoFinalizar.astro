@@ -1,8 +1,8 @@
 ---
 import Popup from "./Popup.astro";
-import { getCollection } from 'astro:content';
-const popUpGuiaFotos = await getCollection('popUpGuiaFotos',);
-const { popUpContent } = await popUpGuiaFotos.render();
+import {  getEntry } from 'astro:content';
+const popUpGuiaFotos = await getEntry('popUpGuiaFotos');
+const  popUpContent  = await popUpGuiaFotos.render();
 // Obtener los datos del producto desde los parámetros de la URL
 const { url } = Astro;
 const urlParams = new URL(url).searchParams;
