@@ -1,4 +1,6 @@
 ---
+title: "Guía de Fotos"
+description: "Instrucciones para subir fotos de mascotas"
 ---
 ### 🐾 ¡Queremos ver a tu mascota! 📸
 
