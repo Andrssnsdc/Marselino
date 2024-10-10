@@ -31,8 +31,9 @@ const { title, description } = Astro.props;
 	<body>
 		<Header />
 		<Carrito></Carrito>
-		<main>
 		<Fondo />
+		<main>
+		
 		<slot />
 		
 		</main>
@@ -66,7 +67,7 @@ const { title, description } = Astro.props;
 	body {
 		min-height: 100dvh; /* Altura mínima dinámica */
 		margin: 0;
-		background-color: var(--white-smoke);
+		
 		overflow-x: hidden;
 		font-family: 'Glory Variable', sans-serif;
 	}

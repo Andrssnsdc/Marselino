@@ -1,12 +1,108 @@
 ---
+import { Image } from 'astro:assets';
+
+Image
 interface Props {
-    title: string;
-    subtitle: string;
-    description: string;
-    backgroundClass: string;
-    productImage: string;
-    colors: Array<{name: string, hex: string}>;
-    sizeGuideImage: string;
-    price: number;
+    botonName: string;
+    Content: any;
+    imagePopUp: string;
+    altImage: string;
+    
   }
+  const {botonName, Content, imagePopUp, altImage } = Astro.props
 ---
+<button class="size-guide-button">{botonName}</button>
+
+<div id="size-guide-modal" class="size-guide-modal">
+    <div class="modal-content">
+      <Image src={imagePopUp} alt={altImage} width={400} height={300} />
+      <div class="markdown-content">
+        <Content />
+    </div>
+      <span class="close-modal">&times;</span>
+    </div>
+</div>
+
+<style>
+.size-guide-button {
+    background: none;
+    border: none;
+    color: var(--white-smoke);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 5px;
+    margin-top: 10px;
+    transition: color 0.3s ease;
+    align-self: center;
+    z-index: 10;
+  }
+ 
+  .size-guide-button:hover {
+    color: var(--lime-green);
+  }
+  .size-guide-modal {
+
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.4);
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--white-smoke);
+    margin: 10% auto;
+    padding: 14px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 40px;
+    z-index: 10000;
+  }
+  .modal-content img {
+    max-width: 100%;
+    height: auto;
+    object-fit: fill;
+  }
+  .close-modal {
+    align-self: center;
+    color: #aaa;
+    float: right;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    
+  }
+  .close-modal:hover,
+  .close-modal:focus {
+    color: var(--dark-gray);
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+<script>
+    const sizeGuideButton = document.querySelector('.size-guide-button');
+    const sizeGuideModal = document.getElementById("size-guide-modal");
+    const closeModal = sizeGuideModal.querySelector('.close-modal');
+    sizeGuideButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sizeGuideModal.style.display = 'block';
+  });
+
+  closeModal.addEventListener('click', () => {
+    sizeGuideModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (event) => {
+    if (event.target === sizeGuideModal) {
+      sizeGuideModal.style.display = 'none';
+    }
+  });
+</script>

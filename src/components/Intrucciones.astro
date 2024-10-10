@@ -124,28 +124,28 @@
  
             /* Estilos específicos para cada paso */
 #step6 {
-    background-color: rgba(205, 218, 113, 0.78); 
+    background-color: rgba(205, 218, 113, 0.98); 
 }
 
 #step5 {
-    background-color: rgba(205, 218, 113, 0.66); 
+    background-color: rgba(205, 218, 113, 0.88); 
 }
 
 #step4 {
-    background-color: rgba(205, 218, 113, 0.54); 
+    background-color: rgba(205, 218, 113, 0.78); 
 }
 
 #step3 {
     
-    background-color: rgba(205, 218, 113, 0.42); 
+    background-color: rgba(205, 218, 113, 0.68); 
 }
 
 #step2 {
-    background-color: rgba(205, 218, 113, 0.36);  
+    background-color: rgba(205, 218, 113, 0.58);  
 }
 
 #step1 {
-    background-color: rgba(205, 218, 113, 0.30); 
+    background-color: rgba(205, 218, 113, 0.48); 
 }
     .step:hover {
         transform: translateY(-8px); /* Efecto de elevación al pasar el mouse */
@@ -164,6 +164,9 @@
 
     /* Estilos para pantallas pequeñas (móviles) */
     @media (max-width: 768px) {
+        .step:hover {
+        transform: translateY(0px); /* Efecto de elevación al pasar el mouse */
+    }
        
         .container {
             max-width: 100vw;
@@ -206,11 +209,11 @@
             position: absolute; /* Posicionamiento absoluto para los botones */
             top: 50%; /* Centrar verticalmente los botones */
             transform: translateY(-50%); /* Ajustar la posición vertical */
-            background-color: rgba(0, 0, 0, 0.3); /* Fondo semitransparente */
+            background-color: rgba(39, 62, 191, 0.568); /* Fondo semitransparente */
             color: var(--white-smoke); /* Color del texto del botón */
             border: none; /* Sin borde */
-            padding: 10px; /* Relleno interno del botón */
-            font-size: 18px; /* Tamaño de fuente del botón */
+            padding: 10px ; /* Relleno interno del botón */
+            font-size: 20px; /* Tamaño de fuente del botón */
             cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
             z-index: 10; /* Asegurar que el botón esté por encima de otros elementos */
             border-radius: 50%; /* Bordes redondeados del botón */
@@ -220,14 +223,17 @@
             justify-content: center; /* Centrar horizontalmente */
             align-items: center; /* Centrar verticalmente */
             transition: background-color 0.3s ease; /* Transición suave para el fondo */
+            
         }
         .nav-button:hover {
             background-color: rgba(0, 0, 0, 0.5); /* Cambiar fondo al pasar el mouse */
         }
         .nav-button.prev {
+            background-color: rgba(39, 62, 191, 0.568);
             left: 10px; /* Posición del botón anterior */
         }
         .nav-button.next {
+            background-color: rgba(39, 62, 191, 0.568);
             right: 10px; /* Posición del botón siguiente */
         }
     }
