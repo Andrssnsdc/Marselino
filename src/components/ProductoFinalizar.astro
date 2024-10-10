@@ -1,8 +1,10 @@
 ---
 import Popup from "./Popup.astro";
-import {  getEntry } from 'astro:content';
-const popUpGuiaFotos = await getEntry('popUpGuiaFotos');
-const  popUpContent  = await popUpGuiaFotos.render();
+import { getEntry } from 'astro:content';
+
+// Obtener la entrada de contenido
+const popUpGuiaFotos = await getEntry('popUpGuiaFotos', 'guia');
+const { Content } = await popUpGuiaFotos.render();
 // Obtener los datos del producto desde los parámetros de la URL
 const { url } = Astro;
 const urlParams = new URL(url).searchParams;
@@ -58,7 +60,7 @@ const backgroundClass = title.toUpperCase() === "CAMISETA" ? "medium-blue" :
                     <div class="error-message" id="positionError"></div>
                 </div>
                 <Popup botonName="Sigue nuestra guía de fotos."
-                       Content={popUpContent}
+                       Content={Content}
                        imagePopUp="/images/fotoInstrucciones.webp"
                        altImage="caras de mascotas collage" />
                 <div class="file-input-container">
