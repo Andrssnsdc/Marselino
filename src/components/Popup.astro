@@ -88,21 +88,30 @@ interface Props {
   }
 </style>
 <script>
-    const sizeGuideButton = document.querySelector('.size-guide-button');
-    const sizeGuideModal = document.getElementById("size-guide-modal");
-    const closeModal = sizeGuideModal.querySelector('.close-modal');
-    sizeGuideButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    sizeGuideModal.style.display = 'block';
-  });
-
-  closeModal.addEventListener('click', () => {
-    sizeGuideModal.style.display = 'none';
-  });
-
-  window.addEventListener('click', (event) => {
-    if (event.target === sizeGuideModal) {
-      sizeGuideModal.style.display = 'none';
+    // Obtener los elementos asegurando su tipado correcto
+    const sizeGuideButton = document.querySelector('.size-guide-button') as HTMLButtonElement | null;
+    const sizeGuideModal = document.getElementById("size-guide-modal") as HTMLElement | null;
+  
+    // Asegurarse de que los elementos no sean nulos antes de agregar eventos
+    if (sizeGuideButton && sizeGuideModal) {
+      const closeModal = sizeGuideModal.querySelector('.close-modal') as HTMLButtonElement | null;
+  
+      if (closeModal) {
+        sizeGuideButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          sizeGuideModal.style.display = 'block';
+        });
+  
+        closeModal.addEventListener('click', () => {
+          sizeGuideModal.style.display = 'none';
+        });
+  
+        window.addEventListener('click', (event) => {
+          if (event.target === sizeGuideModal) {
+            sizeGuideModal.style.display = 'none';
+          }
+        });
+      }
     }
-  });
-</script>
+  </script>
+  
